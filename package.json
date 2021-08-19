@@ -1,0 +1,26 @@
+{
+  "name": "playcanvas-observer",
+  "version": "1.0.0",
+  "description": "Contains the Observer class and related functionality used across the PlayCanvas Editor, pcui etc.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/playcanvas/playcanvas-observer.git"
+  },
+  "author": "PlayCanvas <support@playcanvas.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/playcanvas/playcanvas-observer/issues"
+  },
+  "homepage": "https://github.com/playcanvas/playcanvas-observer#readme",
+  "devDependencies": {
+    "@playcanvas/eslint-config": "1.0.6",
+    "babel-eslint": "^10.1.0",
+    "eslint": "7.19.0",
+    "rollup": "^2.53.2"
+  }
+}
