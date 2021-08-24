@@ -4,13 +4,13 @@ This repository contains classes used across the PlayCanvas Editor and PCUI. The
 
 # Installing
 
-Run:
+To build a UMD module of the library run:
 ```
 npm install
 npm run build
 ```
 
-The built file is a module located at `dist/index.js`.
+The built file will be a UMD module located at `dist/index.js`.
 
 # Events
 
