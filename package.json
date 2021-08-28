@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "Contains the Observer class and related functionality used across the PlayCanvas Editor, pcui etc.",
   "main": "index.js",
+  "eslintConfig": {
+    "extends": "@playcanvas/eslint-config"
+  },
   "scripts": {
+    "lint": "eslint --ext .js index.js src rollup.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c"
   },
