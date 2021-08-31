@@ -4,10 +4,14 @@
   "description": "Contains the Observer class and related functionality used across the PlayCanvas Editor, pcui etc.",
   "main": "index.js",
   "module": "index.mjs",
+  "eslintConfig": {
+    "extends": "@playcanvas/eslint-config"
+  },
   "scripts": {
     "build:umd": "rollup -c --environment target:umd",
     "build:es6": "rollup -c --environment target:es6",
     "build": "rollup -c --environment target:all",
+    "lint": "eslint --ext .js index.js src rollup.config.js",
     "publish:observer": "npm run build && cp ./package.json dist && cp ./LICENSE dist && cp README.md dist && npm publish dist"
   },
   "repository": {
