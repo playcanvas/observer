@@ -94,7 +94,7 @@ Events.prototype.emit = function (name, arg0, arg1, arg2, arg3, arg4, arg5, arg6
         events = events.slice(0);
 
         for (var i = 0; i < events.length; i++) {
-            if (! events[i])
+            if (!events[i])
                 continue;
 
             try {
@@ -125,7 +125,7 @@ Events.prototype.emit = function (name, arg0, arg1, arg2, arg3, arg4, arg5, arg6
 Events.prototype.unbind = function (name, fn) {
     if (name) {
         var events = this._events[name];
-        if (! events)
+        if (!events)
             return this;
 
         if (fn) {
@@ -188,7 +188,7 @@ function EventHandle(owner, name, fn) {
  * @name EventHandle#unbind
  */
 EventHandle.prototype.unbind = function () {
-    if (! this.owner)
+    if (!this.owner)
         return;
 
     this.owner.unbind(this.name, this.fn);
@@ -202,7 +202,7 @@ EventHandle.prototype.unbind = function () {
  * @name EventHandle#call
  */
 EventHandle.prototype.call = function () {
-    if (! this.fn)
+    if (!this.fn)
         return;
 
     this.fn.call(this.owner, arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);

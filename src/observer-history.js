@@ -225,7 +225,7 @@ Object.defineProperty(ObserverHistory.prototype, 'combine', {
         return this._combine;
     },
     set: function (value) {
-        this._combine = !! value;
+        this._combine = !!value;
     }
 });
 

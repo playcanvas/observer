@@ -124,7 +124,7 @@ ObserverList.prototype.positionNextClosest = function (b, fn) {
 ObserverList.prototype.has = function (item) {
     if (this.index) {
         var index = (item instanceof Observer && item.get(this.index)) || item[this.index];
-        return !! this._indexed[index];
+        return !!this._indexed[index];
     }
 
     return this.data.indexOf(item) !== -1;
@@ -181,7 +181,7 @@ ObserverList.prototype.move = function (item, pos) {
 
 
 ObserverList.prototype.remove = function (item) {
-    if (! this.has(item))
+    if (!this.has(item))
         return;
 
     var ind = this.data.indexOf(item);
@@ -204,7 +204,7 @@ ObserverList.prototype.removeByKey = function (index) {
     if (this.index) {
         item = this._indexed[index];
 
-        if (! item)
+        if (!item)
             return;
 
         var ind = this.data.indexOf(item);
@@ -229,7 +229,7 @@ ObserverList.prototype.removeByKey = function (index) {
 ObserverList.prototype.removeBy = function (fn) {
     var i = this.data.length;
     while (i--) {
-        if (! fn(this.data[i]))
+        if (!fn(this.data[i]))
             continue;
 
         if (this.index) {
@@ -265,7 +265,7 @@ ObserverList.prototype.forEach = function (fn) {
 ObserverList.prototype.find = function (fn) {
     var items = [];
     for (var i = 0; i < this.data.length; i++) {
-        if (! fn(this.data[i]))
+        if (!fn(this.data[i]))
             continue;
 
         var index = i;
@@ -280,7 +280,7 @@ ObserverList.prototype.find = function (fn) {
 
 ObserverList.prototype.findOne = function (fn) {
     for (var i = 0; i < this.data.length; i++) {
-        if (! fn(this.data[i]))
+        if (!fn(this.data[i]))
             continue;
 
         var index = i;
