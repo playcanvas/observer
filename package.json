@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/playcanvas/playcanvas-observer#readme",
   "devDependencies": {
-    "@playcanvas/eslint-config": "1.0.6",
+    "@playcanvas/eslint-config": "^1.0.13",
     "babel-eslint": "^10.1.0",
-    "eslint": "7.19.0",
-    "rollup": "^2.53.2"
+    "eslint": "^8.1.0",
+    "rollup": "^2.59.0"
   }
 }
