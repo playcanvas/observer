@@ -1,4 +1,4 @@
-import Events from './events';
+import Events from './events.js';
 
 /**
  * @name HistoryAction
@@ -137,7 +137,7 @@ class History extends Events {
      * @description Clears all history actions.
      */
     clear() {
-        if (! this._actions.length) return;
+        if (!this._actions.length) return;
 
         this._actions.length = 0;
         this._currentActionIndex = -1;

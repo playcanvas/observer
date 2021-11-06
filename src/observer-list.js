@@ -1,5 +1,5 @@
-import Events from './events';
-import Observer from './observer';
+import Events from './events.js';
+import Observer from './observer.js';
 
 /**
  * @class
@@ -38,20 +38,20 @@ class ObserverList extends Events {
 
     indexOf(item) {
         if (this.index) {
-            var index = (item instanceof Observer && item.get(this.index)) || item[this.index];
+            const index = (item instanceof Observer && item.get(this.index)) || item[this.index];
             return (this._indexed[index] && index) || null;
         }
 
-        var ind = this.data.indexOf(item);
+        const ind = this.data.indexOf(item);
         return ind !== -1 ? ind : null;
     }
 
     position(b, fn) {
-        var l = this.data;
-        var min = 0;
-        var max = l.length - 1;
-        var cur;
-        var a, i;
+        const l = this.data;
+        let min = 0;
+        let max = l.length - 1;
+        let cur;
+        let a, i;
         fn = fn || this.sorted;
 
         while (min <= max) {
@@ -73,11 +73,11 @@ class ObserverList extends Events {
     }
 
     positionNextClosest(b, fn) {
-        var l = this.data;
-        var min = 0;
-        var max = l.length - 1;
-        var cur;
-        var a, i;
+        const l = this.data;
+        let min = 0;
+        let max = l.length - 1;
+        let cur;
+        let a, i;
         fn = fn || this.sorted;
 
         if (l.length === 0)
@@ -112,8 +112,8 @@ class ObserverList extends Events {
 
     has(item) {
         if (this.index) {
-            var index = (item instanceof Observer && item.get(this.index)) || item[this.index];
-            return !! this._indexed[index];
+            const index = (item instanceof Observer && item.get(this.index)) || item[this.index];
+            return !!this._indexed[index];
         }
 
         return this.data.indexOf(item) !== -1;
@@ -123,13 +123,13 @@ class ObserverList extends Events {
         if (this.has(item))
             return null;
 
-        var index = this.data.length;
+        let index = this.data.length;
         if (this.index) {
             index = (item instanceof Observer && item.get(this.index)) || item[this.index];
             this._indexed[index] = item;
         }
 
-        var pos = 0;
+        let pos = 0;
 
         if (this.sorted) {
             pos = this.positionNextClosest(item);
@@ -155,7 +155,7 @@ class ObserverList extends Events {
     }
 
     move(item, pos) {
-        var ind = this.data.indexOf(item);
+        const ind = this.data.indexOf(item);
         this.data.splice(ind, 1);
         if (pos === -1) {
             this.data.push(item);
@@ -167,12 +167,12 @@ class ObserverList extends Events {
     }
 
     remove(item) {
-        if (! this.has(item))
+        if (!this.has(item))
             return;
 
-        var ind = this.data.indexOf(item);
+        const ind = this.data.indexOf(item);
 
-        var index = ind;
+        let index = ind;
         if (this.index) {
             index = (item instanceof Observer && item.get(this.index)) || item[this.index];
             delete this._indexed[index];
@@ -184,15 +184,15 @@ class ObserverList extends Events {
     }
 
     removeByKey(index) {
-        var item;
+        let item;
 
         if (this.index) {
             item = this._indexed[index];
 
-            if (! item)
+            if (!item)
                 return;
 
-            var ind = this.data.indexOf(item);
+            const ind = this.data.indexOf(item);
             this.data.splice(ind, 1);
 
             delete this._indexed[index];
@@ -211,9 +211,9 @@ class ObserverList extends Events {
     }
 
     removeBy(fn) {
-        var i = this.data.length;
+        let i = this.data.length;
         while (i--) {
-            if (! fn(this.data[i]))
+            if (!fn(this.data[i]))
                 continue;
 
             if (this.index) {
@@ -226,30 +226,30 @@ class ObserverList extends Events {
     }
 
     clear() {
-        var items = this.data.slice(0);
+        const items = this.data.slice(0);
 
         this.data = [];
         this._indexed = { };
 
-        var i = items.length;
+        let i = items.length;
         while (i--) {
             this.emit('remove', items[i], i);
         }
     }
 
     forEach(fn) {
-        for (var i = 0; i < this.data.length; i++) {
+        for (let i = 0; i < this.data.length; i++) {
             fn(this.data[i], (this.index && this.data[i][this.index]) || i);
         }
     }
 
     find(fn) {
-        var items = [];
-        for (var i = 0; i < this.data.length; i++) {
-            if (! fn(this.data[i]))
+        const items = [];
+        for (let i = 0; i < this.data.length; i++) {
+            if (!fn(this.data[i]))
                 continue;
 
-            var index = i;
+            let index = i;
             if (this.index)
                 index = this.data[i][this.index];
 
@@ -259,11 +259,11 @@ class ObserverList extends Events {
     }
 
     findOne(fn) {
-        for (var i = 0; i < this.data.length; i++) {
-            if (! fn(this.data[i]))
+        for (let i = 0; i < this.data.length; i++) {
+            if (!fn(this.data[i]))
                 continue;
 
-            var index = i;
+            let index = i;
             if (this.index)
                 index = this.data[i][this.index];
 
@@ -285,8 +285,8 @@ class ObserverList extends Events {
     }
 
     json() {
-        var items = this.array();
-        for (var i = 0; i < items.length; i++) {
+        const items = this.array();
+        for (let i = 0; i < items.length; i++) {
             if (items[i] instanceof Observer) {
                 items[i] = items[i].json();
             }

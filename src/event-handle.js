@@ -16,7 +16,7 @@ class EventHandle {
      * @name EventHandle#unbind
      */
     unbind() {
-        if (! this.owner)
+        if (!this.owner)
             return;
 
         this.owner.unbind(this.name, this.fn);
@@ -30,7 +30,7 @@ class EventHandle {
      * @name EventHandle#call
      */
     call() {
-        if (! this.fn)
+        if (!this.fn)
             return;
 
         this.fn.call(this.owner, arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);

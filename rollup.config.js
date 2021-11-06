@@ -1,10 +1,54 @@
+import babel from '@rollup/plugin-babel';
+
+const es5Options = {
+    babelHelpers: 'bundled',
+    babelrc: false,
+    comments: false,
+    compact: false,
+    minified: false,
+    presets: [
+        [
+            '@babel/preset-env', {
+                loose: true,
+                modules: false,
+                targets: {
+                    ie: "11"
+                }
+            }
+        ]
+    ]
+};
+
+const moduleOptions = {
+    babelHelpers: 'bundled',
+    babelrc: false,
+    comments: false,
+    compact: false,
+    minified: false,
+    presets: [
+        [
+            '@babel/preset-env', {
+                bugfixes: true,
+                loose: true,
+                modules: false,
+                targets: {
+                    esmodules: true
+                }
+            }
+        ]
+    ]
+};
+
 const umd = {
     input: 'index.js',
     output: {
         file: 'dist/index.js',
         format: 'umd',
         name: 'observer'
-    }
+    },
+    plugins: [
+        babel(es5Options)
+    ]
 };
 
 const es6 = {
@@ -12,7 +56,10 @@ const es6 = {
     output: {
         file: 'dist/index.mjs',
         format: 'module'
-    }
+    },
+    plugins: [
+        babel(moduleOptions)
+    ]
 };
 
 let targets;

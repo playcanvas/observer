@@ -21,7 +21,7 @@ class Observer extends Events {
         this._pathsWithDuplicates = null;
         if (options.pathsWithDuplicates) {
             this._pathsWithDuplicates = {};
-            for (var i = 0; i < options.pathsWithDuplicates.length; i++) {
+            for (let i = 0; i < options.pathsWithDuplicates.length; i++) {
                 this._pathsWithDuplicates[options.pathsWithDuplicates[i]] = true;
             }
         }
@@ -37,13 +37,13 @@ class Observer extends Events {
 
         this._silent = false;
 
-        var propagate = function (evt) {
+        const propagate = function (evt) {
             return function (path, arg1, arg2, arg3) {
-                if (! this._parent)
+                if (!this._parent)
                     return;
 
-                var key = this._parentKey;
-                if (! key && (this._parentField instanceof Array)) {
+                let key = this._parentKey;
+                if (!key && (this._parentField instanceof Array)) {
                     key = this._parentField.indexOf(this);
 
                     if (key === -1)
@@ -52,7 +52,7 @@ class Observer extends Events {
 
                 path = this._parentPath + '.' + key + '.' + path;
 
-                var state;
+                let state;
                 if (this._silent)
                     state = this._parent.silence();
 
@@ -78,8 +78,8 @@ class Observer extends Events {
     static _splitPathsCache = {};
 
     static _splitPath(path) {
-        var cache = Observer._splitPathsCache;
-        var result = cache[path];
+        const cache = Observer._splitPathsCache;
+        let result = cache[path];
         if (!result) {
             result = path.split('.');
             cache[path] = result;
@@ -94,12 +94,12 @@ class Observer extends Events {
         this._silent = true;
 
         // history hook to prevent array values to be recorded
-        var historyState = this.history && this.history.enabled;
+        const historyState = this.history && this.history.enabled;
         if (historyState)
             this.history.enabled = false;
 
         // sync hook to prevent array values to be recorded as array root already did
-        var syncState = this.sync && this.sync.enabled;
+        const syncState = this.sync && this.sync.enabled;
         if (syncState)
             this.sync.enabled = false;
 
@@ -117,10 +117,10 @@ class Observer extends Events {
     }
 
     _prepare(target, key, value, silent, remote) {
-        var i;
-        var state;
-        var path = (target._path ? (target._path + '.') : '') + key;
-        var type = typeof(value);
+        let i;
+        let state;
+        const path = (target._path ? (target._path + '.') : '') + key;
+        const type = typeof value;
 
         target._keys.push(key);
 
@@ -128,7 +128,7 @@ class Observer extends Events {
             target._data[key] = value.slice(0);
 
             for (i = 0; i < target._data[key].length; i++) {
-                if (typeof(target._data[key][i]) === 'object' && target._data[key][i] !== null) {
+                if (typeof target._data[key][i] === 'object' && target._data[key][i] !== null) {
                     if (target._data[key][i] instanceof Array) {
                         target._data[key][i].slice(0);
                     } else {
@@ -156,7 +156,7 @@ class Observer extends Events {
             if (silent)
                 this.silenceRestore(state);
         } else if (type === 'object' && (value instanceof Object)) {
-            if (typeof(target._data[key]) !== 'object') {
+            if (typeof target._data[key] !== 'object') {
                 target._data[key] = {
                     _path: path,
                     _keys: [],
@@ -165,7 +165,7 @@ class Observer extends Events {
             }
 
             for (i in value) {
-                if (typeof(value[i]) === 'object') {
+                if (typeof value[i] === 'object') {
                     this._prepare(target._data[key], i, value[i], true, remote);
                 } else {
                     state = this.silence();
@@ -207,15 +207,15 @@ class Observer extends Events {
     }
 
     set(path, value, silent, remote, force) {
-        var i;
-        var valueOld;
-        var keys = Observer._splitPath(path);
-        var length = keys.length;
-        var key = keys[length - 1];
-        var node = this;
-        var nodePath = '';
-        var obj = this;
-        var state;
+        let i;
+        let valueOld;
+        let keys = Observer._splitPath(path);
+        const length = keys.length;
+        const key = keys[length - 1];
+        let node = this;
+        let nodePath = '';
+        let obj = this;
+        let state;
 
         for (i = 0; i < length - 1; i++) {
             if (node instanceof Array) {
@@ -226,7 +226,7 @@ class Observer extends Events {
                     obj = node;
                 }
             } else {
-                if (i < length && typeof(node._data[keys[i]]) !== 'object') {
+                if (i < length && typeof node._data[keys[i]] !== 'object') {
                     if (node._data[keys[i]])
                         obj.unset((node.__path ? node.__path + '.' : '') + keys[i]);
 
@@ -246,7 +246,7 @@ class Observer extends Events {
         }
 
         if (node instanceof Array) {
-            var ind = parseInt(key, 10);
+            const ind = parseInt(key, 10);
             if (node[ind] === value && !force)
                 return;
 
@@ -276,8 +276,8 @@ class Observer extends Events {
                 obj.silenceRestore(state);
 
             return true;
-        } else if (node._data && ! node._data.hasOwnProperty(key)) {
-            if (typeof(value) === 'object') {
+        } else if (node._data && !node._data.hasOwnProperty(key)) {
+            if (typeof value === 'object') {
                 return obj._prepare(node, key, value, false, remote);
             }
             node._data[key] = value;
@@ -295,12 +295,12 @@ class Observer extends Events {
             return true;
         }
 
-        if (typeof(value) === 'object' && (value instanceof Array)) {
+        if (typeof value === 'object' && (value instanceof Array)) {
             if (value.equals(node._data[key]) && !force)
                 return false;
 
             valueOld = node._data[key];
-            if (! (valueOld instanceof Observer))
+            if (!(valueOld instanceof Observer))
                 valueOld = obj.json(valueOld);
 
             if (node._data[key] && node._data[key].length === value.length) {
@@ -347,15 +347,15 @@ class Observer extends Events {
                 obj.silenceRestore(state);
 
             return true;
-        } else if (typeof(value) === 'object' && (value instanceof Object)) {
-            var changed = false;
+        } else if (typeof value === 'object' && (value instanceof Object)) {
+            let changed = false;
             valueOld = node._data[key];
-            if (! (valueOld instanceof Observer))
+            if (!(valueOld instanceof Observer))
                 valueOld = obj.json(valueOld);
 
             keys = Object.keys(value);
 
-            if (! node._data[key] || ! node._data[key]._data) {
+            if (!node._data[key] || !node._data[key]._data) {
                 if (node._data[key]) {
                     obj.unset((node.__path ? node.__path + '.' : '') + key);
                 } else {
@@ -369,14 +369,14 @@ class Observer extends Events {
                 };
             }
 
-            var c;
+            let c;
 
-            for (var n in node._data[key]._data) {
-                if (! value.hasOwnProperty(n)) {
+            for (const n in node._data[key]._data) {
+                if (!value.hasOwnProperty(n)) {
                     c = obj.unset(path + '.' + n, true);
                     if (c) changed = true;
                 } else if (node._data[key]._data.hasOwnProperty(n)) {
-                    if (! obj._equals(node._data[key]._data[n], value[n])) {
+                    if (!obj._equals(node._data[key]._data[n], value[n])) {
                         c = obj.set(path + '.' + n, value[n], true);
                         if (c) changed = true;
                     }
@@ -390,7 +390,7 @@ class Observer extends Events {
                 if (value[keys[i]] === undefined && node._data[key]._data.hasOwnProperty(keys[i])) {
                     c = obj.unset(path + '.' + keys[i], true);
                     if (c) changed = true;
-                } else if (typeof(value[keys[i]]) === 'object') {
+                } else if (typeof value[keys[i]] === 'object') {
                     if (node._data[key]._data.hasOwnProperty(keys[i])) {
                         c = obj.set(path + '.' + keys[i], value[keys[i]], true);
                         if (c) changed = true;
@@ -398,8 +398,8 @@ class Observer extends Events {
                         c = obj._prepare(node._data[key], keys[i], value[keys[i]], true, remote);
                         if (c) changed = true;
                     }
-                } else if (! obj._equals(node._data[key]._data[keys[i]], value[keys[i]])) {
-                    if (typeof(value[keys[i]]) === 'object') {
+                } else if (!obj._equals(node._data[key]._data[keys[i]], value[keys[i]])) {
+                    if (typeof value[keys[i]] === 'object') {
                         c = obj.set(node._data[key]._path + '.' + keys[i], value[keys[i]], true);
                         if (c) changed = true;
                     } else if (node._data[key]._data[keys[i]] !== value[keys[i]]) {
@@ -422,7 +422,7 @@ class Observer extends Events {
                 if (silent)
                     state = obj.silence();
 
-                var val = obj.json(node._data[key]);
+                const val = obj.json(node._data[key]);
 
                 obj.emit(node._data[key]._path + ':set', val, valueOld, remote);
                 obj.emit('*:set', node._data[key]._path, val, valueOld, remote);
@@ -435,8 +435,8 @@ class Observer extends Events {
             return false;
         }
 
-        var data;
-        if (! node.hasOwnProperty('_data') && node.hasOwnProperty(key)) {
+        let data;
+        if (!node.hasOwnProperty('_data') && node.hasOwnProperty(key)) {
             data = node;
         } else {
             data = node._data;
@@ -449,7 +449,7 @@ class Observer extends Events {
             state = obj.silence();
 
         valueOld = data[key];
-        if (! (valueOld instanceof Observer))
+        if (!(valueOld instanceof Observer))
             valueOld = obj.json(valueOld);
 
         data[key] = value;
@@ -464,9 +464,9 @@ class Observer extends Events {
     }
 
     has(path) {
-        var keys = Observer._splitPath(path);
-        var node = this;
-        for (var i = 0, len = keys.length; i < len; i++) {
+        const keys = Observer._splitPath(path);
+        let node = this;
+        for (let i = 0, len = keys.length; i < len; i++) {
             if (node == undefined)
                 return undefined;
 
@@ -481,9 +481,9 @@ class Observer extends Events {
     }
 
     get(path, raw) {
-        var keys = Observer._splitPath(path);
-        var node = this;
-        for (var i = 0; i < keys.length; i++) {
+        const keys = Observer._splitPath(path);
+        let node = this;
+        for (let i = 0; i < keys.length; i++) {
             if (node == undefined)
                 return undefined;
 
@@ -519,11 +519,11 @@ class Observer extends Events {
     }
 
     unset(path, silent, remote) {
-        var i;
-        var keys = Observer._splitPath(path);
-        var key = keys[keys.length - 1];
-        var node = this;
-        var obj = this;
+        let i;
+        const keys = Observer._splitPath(path);
+        const key = keys[keys.length - 1];
+        let node = this;
+        let obj = this;
 
         for (i = 0; i < keys.length - 1; i++) {
             if (node instanceof Array) {
@@ -537,11 +537,11 @@ class Observer extends Events {
             }
         }
 
-        if (! node._data || ! node._data.hasOwnProperty(key))
+        if (!node._data || !node._data.hasOwnProperty(key))
             return false;
 
-        var valueOld = node._data[key];
-        if (! (valueOld instanceof Observer))
+        let valueOld = node._data[key];
+        if (!(valueOld instanceof Observer))
             valueOld = obj.json(valueOld);
 
         // recursive
@@ -556,7 +556,7 @@ class Observer extends Events {
         node._keys.splice(node._keys.indexOf(key), 1);
         delete node._data[key];
 
-        var state;
+        let state;
         if (silent)
             state = obj.silence();
 
@@ -570,12 +570,12 @@ class Observer extends Events {
     }
 
     remove(path, ind, silent, remote) {
-        var keys = Observer._splitPath(path);
-        var key = keys[keys.length - 1];
-        var node = this;
-        var obj = this;
+        const keys = Observer._splitPath(path);
+        const key = keys[keys.length - 1];
+        let node = this;
+        let obj = this;
 
-        for (var i = 0; i < keys.length - 1; i++) {
+        for (let i = 0; i < keys.length - 1; i++) {
             if (node instanceof Array) {
                 node = node[parseInt(keys[i], 10)];
                 if (node instanceof Observer) {
@@ -589,14 +589,14 @@ class Observer extends Events {
             }
         }
 
-        if (! node._data || ! node._data.hasOwnProperty(key) || ! (node._data[key] instanceof Array))
+        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array))
             return;
 
-        var arr = node._data[key];
+        const arr = node._data[key];
         if (arr.length < ind)
             return;
 
-        var value = arr[ind];
+        let value = arr[ind];
         if (value instanceof Observer) {
             value._parent = null;
         } else {
@@ -605,7 +605,7 @@ class Observer extends Events {
 
         arr.splice(ind, 1);
 
-        var state;
+        let state;
         if (silent)
             state = obj.silence();
 
@@ -619,12 +619,12 @@ class Observer extends Events {
     }
 
     removeValue(path, value, silent, remote) {
-        var keys = Observer._splitPath(path);
-        var key = keys[keys.length - 1];
-        var node = this;
-        var obj = this;
+        const keys = Observer._splitPath(path);
+        const key = keys[keys.length - 1];
+        let node = this;
+        let obj = this;
 
-        for (var i = 0; i < keys.length - 1; i++) {
+        for (let i = 0; i < keys.length - 1; i++) {
             if (node instanceof Array) {
                 node = node[parseInt(keys[i], 10)];
                 if (node instanceof Observer) {
@@ -638,12 +638,12 @@ class Observer extends Events {
             }
         }
 
-        if (! node._data || ! node._data.hasOwnProperty(key) || ! (node._data[key] instanceof Array))
+        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array))
             return;
 
-        var arr = node._data[key];
+        const arr = node._data[key];
 
-        var ind = arr.indexOf(value);
+        const ind = arr.indexOf(value);
         if (ind === -1) {
             return;
         }
@@ -660,7 +660,7 @@ class Observer extends Events {
 
         arr.splice(ind, 1);
 
-        var state;
+        let state;
         if (silent)
             state = obj.silence();
 
@@ -674,12 +674,12 @@ class Observer extends Events {
     }
 
     insert(path, value, ind, silent, remote) {
-        var keys = Observer._splitPath(path);
-        var key = keys[keys.length - 1];
-        var node = this;
-        var obj = this;
+        const keys = Observer._splitPath(path);
+        const key = keys[keys.length - 1];
+        let node = this;
+        let obj = this;
 
-        for (var i = 0; i < keys.length - 1; i++) {
+        for (let i = 0; i < keys.length - 1; i++) {
             if (node instanceof Array) {
                 node = node[parseInt(keys[i], 10)];
                 if (node instanceof Observer) {
@@ -693,10 +693,10 @@ class Observer extends Events {
             }
         }
 
-        if (! node._data || ! node._data.hasOwnProperty(key) || ! (node._data[key] instanceof Array))
+        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array))
             return;
 
-        var arr = node._data[key];
+        const arr = node._data[key];
 
         value = obj._doInsert(node, key, value, ind);
 
@@ -704,7 +704,7 @@ class Observer extends Events {
             ind = arr.length - 1;
         }
 
-        var state;
+        let state;
         if (silent)
             state = obj.silence();
 
@@ -720,7 +720,7 @@ class Observer extends Events {
     _doInsert(node, key, value, ind, allowDuplicates) {
         const arr = node._data[key];
 
-        if (typeof(value) === 'object' && ! (value instanceof Observer) && value !== null) {
+        if (typeof value === 'object' && !(value instanceof Observer) && value !== null) {
             if (value instanceof Array) {
                 value = value.slice(0);
             } else {
@@ -754,12 +754,12 @@ class Observer extends Events {
     }
 
     move(path, indOld, indNew, silent, remote) {
-        var keys = Observer._splitPath(path);
-        var key = keys[keys.length - 1];
-        var node = this;
-        var obj = this;
+        const keys = Observer._splitPath(path);
+        const key = keys[keys.length - 1];
+        let node = this;
+        let obj = this;
 
-        for (var i = 0; i < keys.length - 1; i++) {
+        for (let i = 0; i < keys.length - 1; i++) {
             if (node instanceof Array) {
                 node = node[parseInt(keys[i], 10)];
                 if (node instanceof Observer) {
@@ -773,15 +773,15 @@ class Observer extends Events {
             }
         }
 
-        if (! node._data || ! node._data.hasOwnProperty(key) || ! (node._data[key] instanceof Array))
+        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array))
             return;
 
-        var arr = node._data[key];
+        const arr = node._data[key];
 
         if (arr.length < indOld || arr.length < indNew || indOld === indNew)
             return;
 
-        var value = arr[indOld];
+        let value = arr[indOld];
 
         arr.splice(indOld, 1);
 
@@ -790,10 +790,10 @@ class Observer extends Events {
 
         arr.splice(indNew, 0, value);
 
-        if (! (value instanceof Observer))
+        if (!(value instanceof Observer))
             value = obj.json(value);
 
-        var state;
+        let state;
         if (silent)
             state = obj.silence();
 
@@ -807,13 +807,11 @@ class Observer extends Events {
     }
 
     patch(data, removeMIssingKeys) {
-        var key;
-
-        if (typeof(data) !== 'object')
+        if (typeof data !== 'object')
             return;
 
-        for (key in data) {
-            if (typeof(data[key]) === 'object' && ! this._data.hasOwnProperty(key)) {
+        for (const key in data) {
+            if (typeof data[key] === 'object' && !this._data.hasOwnProperty(key)) {
                 this._prepare(this, key, data[key]);
             } else if (this._data[key] !== data[key]) {
                 this.set(key, data[key]);
@@ -821,7 +819,7 @@ class Observer extends Events {
         }
 
         if (removeMIssingKeys) {
-            for (key in this._data) {
+            for (const key in this._data) {
                 if (!data.hasOwnProperty(key)) {
                     this.unset(key);
                 }
@@ -830,24 +828,24 @@ class Observer extends Events {
     }
 
     json(target) {
-        var key, n;
-        var obj = { };
-        var node = target === undefined ? this : target;
-        var len, nlen;
+        let key, n;
+        let obj = { };
+        const node = target === undefined ? this : target;
+        let len, nlen;
 
         if (node instanceof Object && node._keys) {
             len = node._keys.length;
-            for (var i = 0; i < len; i++) {
+            for (let i = 0; i < len; i++) {
                 key = node._keys[i];
-                var value = node._data[key];
-                var type = typeof(value);
+                const value = node._data[key];
+                const type = typeof value;
 
                 if (type === 'object' && (value instanceof Array)) {
                     obj[key] = value.slice(0);
 
                     nlen = obj[key].length;
                     for (n = 0; n < nlen; n++) {
-                        if (typeof(obj[key][n]) === 'object')
+                        if (typeof obj[key][n] === 'object')
                             obj[key][n] = this.json(obj[key][n]);
                     }
                 } else if (type === 'object' && (value instanceof Object)) {
@@ -859,14 +857,14 @@ class Observer extends Events {
         } else {
             if (node === null) {
                 return null;
-            } else if (typeof(node) === 'object' && (node instanceof Array)) {
+            } else if (typeof node === 'object' && (node instanceof Array)) {
                 obj = node.slice(0);
 
                 len = obj.length;
                 for (n = 0; n < len; n++) {
                     obj[n] = this.json(obj[n]);
                 }
-            } else if (typeof(node) === 'object') {
+            } else if (typeof node === 'object') {
                 for (key in node) {
                     if (node.hasOwnProperty(key))
                         obj[key] = node[key];
@@ -878,14 +876,13 @@ class Observer extends Events {
         return obj;
     }
 
-    forEach(fn, target, path) {
-        var node = target || this;
-        path = path || '';
+    forEach(fn, target, path = '') {
+        const node = target || this;
 
-        for (var i = 0; i < node._keys.length; i++) {
-            var key = node._keys[i];
-            var value = node._data[key];
-            var type = (this.schema && this.schema.has(path + key) && this.schema.get(path + key).type.name.toLowerCase()) || typeof(value);
+        for (let i = 0; i < node._keys.length; i++) {
+            const key = node._keys[i];
+            const value = node._data[key];
+            const type = (this.schema && this.schema.has(path + key) && this.schema.get(path + key).type.name.toLowerCase()) || typeof value;
 
             if (type === 'object' && (value instanceof Array)) {
                 fn(path + key, 'array', value, key);

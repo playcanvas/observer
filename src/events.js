@@ -50,7 +50,7 @@ class Events {
      * @returns {EventHandle} EventHandle
      */
     on(name, fn) {
-        var events = this._events[name];
+        const events = this._events[name];
         if (events === undefined) {
             this._events[name] = [fn];
         } else {
@@ -67,9 +67,8 @@ class Events {
      * @returns {EventHandle} EventHandle
      */
     once(name, fn) {
-        var self = this;
-        var evt = this.on(name, function (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
-            fn.call(self, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        const evt = this.on(name, (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) => {
+            fn.call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
             evt.unbind();
         });
         return evt;
@@ -91,12 +90,12 @@ class Events {
     emit(name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
         if (this._suspendEvents) return;
 
-        var events = this._events[name];
+        let events = this._events[name];
         if (events && events.length) {
             events = events.slice(0);
 
-            for (var i = 0; i < events.length; i++) {
-                if (! events[i])
+            for (let i = 0; i < events.length; i++) {
+                if (!events[i])
                     continue;
 
                 try {
@@ -126,12 +125,12 @@ class Events {
      */
     unbind(name, fn) {
         if (name) {
-            var events = this._events[name];
-            if (! events)
+            const events = this._events[name];
+            if (!events)
                 return this;
 
             if (fn) {
-                var i = events.indexOf(fn);
+                const i = events.indexOf(fn);
                 if (i !== -1) {
                     if (events.length === 1) {
                         delete this._events[name];
