@@ -19,6 +19,11 @@ describe("Observer", () => {
     it('supports constructor with zero arguments', () => {
         const observer = new Observer();
         expect(observer).to.be.an('object');
+
+        observer.set('key', 'hello');
+        expect(observer.get('key')).to.equal('hello');
+
+        observer.destroy();
     });
 
     it('supports querying of properties', () => {
@@ -41,6 +46,8 @@ describe("Observer", () => {
 
         result = observer.has('height');
         expect(result).to.be.false;
+
+        observer.destroy();
     });
 
     it('converts observer data to json', () => {
@@ -61,65 +68,85 @@ describe("Observer", () => {
         expect(json.address).to.be.an('object');
         expect(json.address.city).to.equal('London');
         expect(json.address.street).to.equal('Wall Street');
+
+        observer.destroy();
     });
 
     it('fires wildcard set event when string property is set to a new value', () => {
         const observer = new Observer(getData());
+
         let set = false;
         observer.on('*:set', () => {
             set = true;
         });
         observer.set('name', 'Peter');
         expect(set).to.be.true;
+
+        observer.destroy();
     });
 
     it('does not fire wildcard set event when string property is set to the same value', () => {
         const observer = new Observer(getData());
+
         let set = false;
         observer.on('*:set', () => {
             set = true;
         });
         observer.set('name', 'Will');
         expect(set).to.be.false;
+
+        observer.destroy();
     });
 
     it('fires named set event when string property is set to a new value', () => {
         const observer = new Observer(getData());
+
         let set = false;
         observer.on('name:set', () => {
             set = true;
         });
         observer.set('name', 'Peter');
         expect(set).to.be.true;
+
+        observer.destroy();
     });
 
     it('does not fire named set event when string property is set to the same value', () => {
         const observer = new Observer(getData());
+
         let set = false;
         observer.on('name:set', () => {
             set = true;
         });
         observer.set('name', 'Will');
         expect(set).to.be.false;
+
+        observer.destroy();
     });
 
     it('fires wildcard set event when 2 part path string property is set to a new value', () => {
         const observer = new Observer(getData());
+
         let set = false;
         observer.on('*:set', () => {
             set = true;
         });
         observer.set('address.city', 'Los Angeles');
         expect(set).to.be.true;
+
+        observer.destroy();
     });
 
     it('does not fire wildcard set event when 2 part path string property is set to the same value', () => {
         const observer = new Observer(getData());
+
         let set = false;
         observer.on('*:set', () => {
             set = true;
         });
         observer.set('address.city', 'London');
         expect(set).to.be.false;
+
+        observer.destroy();
     });
 });
