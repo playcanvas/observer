@@ -149,7 +149,7 @@ class History extends Events {
     }
 
     /**
-     * The the last action committed to the history.
+     * The last action committed to the history.
      *
      * @type {HistoryAction}
      */
@@ -166,17 +166,17 @@ class History extends Events {
         return this._canUndo;
     }
 
-    /**
-     * Returns the last history action.
-     *
-     * @type {boolean}
-     */
     set canUndo(value) {
         if (this._canUndo === value) return;
         this._canUndo = value;
         this.emit('canUndo', value);
     }
 
+    /**
+     * Whether we can redo at this time.
+     *
+     * @type {boolean}
+     */
     get canRedo() {
         return this._canRedo;
     }
