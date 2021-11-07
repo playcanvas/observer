@@ -199,6 +199,9 @@ class ObserverHistory extends Events {
         this.item = null;
     }
 
+    /**
+     * @type {boolean}
+     */
     get enabled() {
         return this._enabled;
     }
@@ -207,6 +210,9 @@ class ObserverHistory extends Events {
         this._enabled = !!value;
     }
 
+    /**
+     * @type {string}
+     */
     get prefix() {
         return this._prefix;
     }
@@ -215,6 +221,9 @@ class ObserverHistory extends Events {
         this._prefix = value || '';
     }
 
+    /**
+     * @type {boolean}
+     */
     get combine() {
         return this._combine;
     }

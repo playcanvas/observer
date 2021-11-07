@@ -16,10 +16,6 @@ import Events from './events.js';
  * Manages history actions for undo / redo operations.
  *
  * @augments Events
- * @property {HistoryAction} currentAction Returns the current history action
- * @property {HistoryAction} lastAction Returns the last history action
- * @property {boolean} canUndo Whether we can undo at this time.
- * @property {boolean} canRedo Whether we can redo at this time.
  */
 class History extends Events {
     /**
@@ -143,18 +139,38 @@ class History extends Events {
         this.canRedo = false;
     }
 
+    /**
+     * The current history action.
+     *
+     * @type {HistoryAction}
+     */
     get currentAction() {
         return this._actions[this._currentActionIndex] || null;
     }
 
+    /**
+     * The the last action committed to the history.
+     *
+     * @type {HistoryAction}
+     */
     get lastAction() {
         return this._actions[this._actions.length - 1] || null;
     }
 
+    /**
+     * Whether we can undo at this time.
+     *
+     * @type {boolean}
+     */
     get canUndo() {
         return this._canUndo;
     }
 
+    /**
+     * Returns the last history action.
+     *
+     * @type {boolean}
+     */
     set canUndo(value) {
         if (this._canUndo === value) return;
         this._canUndo = value;
