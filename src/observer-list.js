@@ -2,11 +2,16 @@ import Events from './events.js';
 import Observer from './observer.js';
 
 /**
- * @class
- * @name ObserverList
- * @param {any} options - Options
+ * A list of observers.
+ *
+ * @augments Events
  */
 class ObserverList extends Events {
+    /**
+     * @param {object} [options] - Options
+     * @param {boolean} [options.sorted] - Sorted
+     * @param {string} [options.index] - Index
+     */
     constructor(options = {}) {
         super();
 

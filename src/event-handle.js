@@ -1,11 +1,9 @@
-/**
- * @class
- * @name EventHandle
- * @param {Events} owner - Owner
- * @param {string} name - Name
- * @param {HandleEvent} fn - Callback function
- */
 class EventHandle {
+    /**
+     * @param {Events} owner - Owner
+     * @param {string} name - Name
+     * @param {HandleEvent} fn - Callback function
+     */
     constructor(owner, name, fn) {
         this.owner = owner;
         this.name = name;
@@ -13,7 +11,6 @@ class EventHandle {
     }
 
     /**
-     * @name EventHandle#unbind
      */
     unbind() {
         if (!this.owner)
@@ -27,7 +24,6 @@ class EventHandle {
     }
 
     /**
-     * @name EventHandle#call
      */
     call() {
         if (!this.fn)
@@ -37,7 +33,6 @@ class EventHandle {
     }
 
     /**
-     * @name EventHandle#on
      * @param {string} name - Name
      * @param {HandleEvent} fn - Callback function
      * @returns {EventHandle} - EventHandle

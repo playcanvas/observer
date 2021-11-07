@@ -2,7 +2,7 @@ import EventHandle from './event-handle.js';
 
 /**
  * @callback HandleEvent
- * @description Callback used by {@link Events} and {@link EventHandle} functions. Note the callback is limited to 8 arguments.
+ * Callback used by {@link Events} and {@link EventHandle} functions. Note the callback is limited to 8 arguments.
  * @param {*} [arg1] - First argument that is passed from caller.
  * @param {*} [arg2] - Second argument that is passed from caller.
  * @param {*} [arg3] - Third argument that is passed from caller.
@@ -14,8 +14,7 @@ import EventHandle from './event-handle.js';
  */
 
 /**
- * @class
- * @name Events
+ * Base class for event handling.
  */
 class Events {
     constructor() {
@@ -44,7 +43,6 @@ class Events {
     }
 
     /**
-     * @name Events#on
      * @param {string} name - Name
      * @param {HandleEvent} fn - Callback function
      * @returns {EventHandle} EventHandle
@@ -61,7 +59,6 @@ class Events {
     }
 
     /**
-     * @name Events#once
      * @param {string} name - Name
      * @param {HandleEvent} fn - Callback function
      * @returns {EventHandle} EventHandle
@@ -75,16 +72,15 @@ class Events {
     }
 
     /**
-     * @name Events#emit
      * @param {string} name - Name
-     * @param {any} arg0 - First argument
-     * @param {any} arg1 - Second argument
-     * @param {any} arg2 - Third argument
-     * @param {any} arg3 - Fourth argument
-     * @param {any} arg4 - Fifth argument
-     * @param {any} arg5 - Sixth argument
-     * @param {any} arg6 - Seventh argument
-     * @param {any} arg7 - Eights argument
+     * @param {*} [arg0] - First argument
+     * @param {*} [arg1] - Second argument
+     * @param {*} [arg2] - Third argument
+     * @param {*} [arg3] - Fourth argument
+     * @param {*} [arg4] - Fifth argument
+     * @param {*} [arg5] - Sixth argument
+     * @param {*} [arg6] - Seventh argument
+     * @param {*} [arg7] - Eights argument
      * @returns {Events} Self for chaining.
      */
     emit(name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
@@ -118,7 +114,6 @@ class Events {
     }
 
     /**
-     * @name Events#unbind
      * @param {string} name - Name
      * @param {HandleEvent} fn - Callback function
      * @returns {Events} - This

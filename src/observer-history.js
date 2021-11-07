@@ -2,11 +2,14 @@ import Events from './events.js';
 import Observer from './observer.js';
 
 /**
- * @class
- * @name ObserverHistory
- * @param {any} args - Arguments
+ * History for an observer.
+ *
+ * @augments Events
  */
 class ObserverHistory extends Events {
+    /**
+     * @param {any} args - Arguments
+     */
     constructor(args = {}) {
         super();
 

@@ -13,21 +13,21 @@ import Events from './events.js';
  */
 
 /**
- * @name History
- * @class
- * @classdesc Manages history actions for undo / redo operations.
+ * Manages history actions for undo / redo operations.
+ *
+ * @augments Events
  * @property {HistoryAction} currentAction Returns the current history action
  * @property {HistoryAction} lastAction Returns the last history action
  * @property {boolean} canUndo Whether we can undo at this time.
  * @property {boolean} canRedo Whether we can redo at this time.
- * @augments Events
  */
 class History extends Events {
     /**
-     * Creates a new pcui.History.
+     * Creates a new History.
      */
     constructor() {
         super();
+
         this._actions = [];
         this._currentActionIndex = -1;
         this._canUndo = false;
@@ -35,8 +35,8 @@ class History extends Events {
     }
 
     /**
-     * @name History#add
-     * @description Adds a new history action
+     * Adds a new history action
+     *
      * @param {HistoryAction} action - The action
      */
     add(action) {
@@ -79,8 +79,7 @@ class History extends Events {
     }
 
     /**
-     * @name History#undo
-     * @description Undo the last history action
+     * Undo the last history action
      */
     undo() {
         if (!this.canUndo) return;
@@ -107,8 +106,7 @@ class History extends Events {
     }
 
     /**
-     * @name History#redo
-     * @description Redo the current history action
+     * Redo the current history action
      */
     redo() {
         if (!this.canRedo) return;
@@ -133,8 +131,7 @@ class History extends Events {
     }
 
     /**
-     * @name History#clear
-     * @description Clears all history actions.
+     * Clears all history actions.
      */
     clear() {
         if (!this._actions.length) return;
