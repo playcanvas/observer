@@ -1,33 +1,53 @@
 {
   "name": "@playcanvas/observer",
   "version": "1.1.0",
-  "description": "Contains the Observer class and related functionality used across the PlayCanvas Editor, pcui etc.",
+  "author": "PlayCanvas <support@playcanvas.com>",
+  "homepage": "https://github.com/playcanvas/playcanvas-observer#readme",
+  "description": "Generic implementation of the observer pattern",
+  "keywords": [
+    "playcanvas",
+    "observer"
+  ],
+  "license": "MIT",
   "main": "index.js",
   "module": "index.mjs",
+  "types": "observer.d.ts",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/playcanvas/playcanvas-observer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/playcanvas/playcanvas-observer.git"
+  },
   "eslintConfig": {
-    "extends": "@playcanvas/eslint-config"
+    "extends": "@playcanvas/eslint-config",
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "requireConfigFile": false
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/eslint-parser": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@playcanvas/eslint-config": "^1.0.13",
+    "@rollup/plugin-babel": "5.3.0",
+    "chai": "4.3.4",
+    "eslint": "^8.1.0",
+    "jsdoc": "^3.6.7",
+    "mocha": "^9.1.3",
+    "rollup": "^2.59.0",
+    "tsd-jsdoc": "2.5.0",
+    "typescript": "^4.4.4"
   },
   "scripts": {
     "build:umd": "rollup -c --environment target:umd",
     "build:es6": "rollup -c --environment target:es6",
     "build": "rollup -c --environment target:all",
     "lint": "eslint --ext .js index.js src rollup.config.js",
-    "publish:observer": "npm run build && cp ./package.json dist && cp ./LICENSE dist && cp README.md dist && npm publish dist"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/playcanvas/playcanvas-observer.git"
-  },
-  "author": "PlayCanvas <support@playcanvas.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/playcanvas/playcanvas-observer/issues"
-  },
-  "homepage": "https://github.com/playcanvas/playcanvas-observer#readme",
-  "devDependencies": {
-    "@playcanvas/eslint-config": "^1.0.13",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^8.1.0",
-    "rollup": "^2.59.0"
+    "publish:observer": "npm run build && npm run tsd && cp ./package.json dist && cp ./LICENSE dist && cp README.md dist && npm publish dist",
+    "test": "mocha",
+    "tsd": "jsdoc -c conf-tsd.json"
   }
 }

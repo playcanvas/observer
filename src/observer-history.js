@@ -1,232 +1,236 @@
-import Events from './events';
-import Observer from './observer';
+import Events from './events.js';
+import Observer from './observer.js';
 
 /**
- * @class
- * @name ObserverHistory
- * @param {any} args - Arguments
+ * History for an observer.
+ *
+ * @augments Events
  */
-function ObserverHistory(args) {
-    Events.call(this);
+class ObserverHistory extends Events {
+    /**
+     * @param {any} args - Arguments
+     */
+    constructor(args = {}) {
+        super();
 
-    args = args || {};
+        this.item = args.item;
+        this._history = args.history;
+        this._enabled = args.enabled || true;
+        this._prefix = args.prefix || '';
+        this._combine = args.combine || false;
 
-    this.item = args.item;
-    this._history = args.history;
-    this._enabled = args.enabled || true;
-    this._prefix = args.prefix || '';
-    this._combine = args.combine || false;
+        this._events = [];
 
-    this._events = [];
+        this._initialize();
+    }
 
-    this._initialize();
-}
-ObserverHistory.prototype = Object.create(Events.prototype);
+    _initialize() {
+        this._events.push(this.item.on('*:set', (path, value, valueOld) => {
+            if (!this._enabled || !this._history) return;
 
+            // need jsonify
+            if (value instanceof Observer)
+                value = value.json();
 
-ObserverHistory.prototype._initialize = function () {
-    var self = this;
+            // action
+            const action = {
+                name: this._prefix + path,
+                combine: this._combine,
+                undo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-    this._events.push(this.item.on('*:set', function (path, value, valueOld) {
-        if (!self._enabled || !self._history) return;
+                    item.history.enabled = false;
 
-        // need jsonify
-        if (value instanceof Observer)
-            value = value.json();
+                    if (valueOld === undefined) {
+                        item.unset(path);
+                    } else {
+                        item.set(path, valueOld);
+                    }
 
-        // action
-        var action = {
-            name: self._prefix + path,
-            combine: self._combine,
-            undo: function () {
-                var item = self.item.latest();
-                if (!item) return;
+                    item.history.enabled = true;
+                },
+                redo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-                item.history.enabled = false;
+                    item.history.enabled = false;
 
-                if (valueOld === undefined) {
-                    item.unset(path);
-                } else {
+                    if (value === undefined) {
+                        item.unset(path);
+                    } else {
+                        item.set(path, value);
+                    }
+
+                    item.history.enabled = true;
+                }
+            };
+
+            this._history.add(action);
+        }));
+
+        this._events.push(this.item.on('*:unset', (path, valueOld) => {
+            if (!this._enabled || !this._history) return;
+
+            // action
+            const action = {
+                name: this._prefix + path,
+                combine: this._combine,
+                undo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
+
+                    item.history.enabled = false;
                     item.set(path, valueOld);
-                }
+                    item.history.enabled = true;
+                },
+                redo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-                item.history.enabled = true;
-            },
-            redo: function () {
-                var item = self.item.latest();
-                if (!item) return;
-
-                item.history.enabled = false;
-
-                if (value === undefined) {
+                    item.history.enabled = false;
                     item.unset(path);
-                } else {
-                    item.set(path, value);
+                    item.history.enabled = true;
                 }
+            };
 
-                item.history.enabled = true;
-            }
-        };
+            this._history.add(action);
+        }));
 
-        self._history.add(action);
-    }));
+        this._events.push(this.item.on('*:insert', (path, value, ind) => {
+            if (!this._enabled || !this._history) return;
 
-    this._events.push(this.item.on('*:unset', function (path, valueOld) {
-        if (!self._enabled || !self._history) return;
+            // need jsonify
+            // if (value instanceof Observer)
+            //     value = value.json();
 
-        // action
-        var action = {
-            name: self._prefix + path,
-            combine: self._combine,
-            undo: function () {
-                var item = self.item.latest();
-                if (!item) return;
+            // action
+            const action = {
+                name: this._prefix + path,
+                combine: this._combine,
+                undo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-                item.history.enabled = false;
-                item.set(path, valueOld);
-                item.history.enabled = true;
-            },
-            redo: function () {
-                var item = self.item.latest();
-                if (!item) return;
+                    item.history.enabled = false;
+                    item.removeValue(path, value);
+                    item.history.enabled = true;
+                },
+                redo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-                item.history.enabled = false;
-                item.unset(path);
-                item.history.enabled = true;
-            }
-        };
+                    item.history.enabled = false;
+                    item.insert(path, value, ind);
+                    item.history.enabled = true;
+                }
+            };
 
-        self._history.add(action);
-    }));
+            this._history.add(action);
+        }));
 
-    this._events.push(this.item.on('*:insert', function (path, value, ind) {
-        if (!self._enabled || !self._history) return;
+        this._events.push(this.item.on('*:remove', (path, value, ind) => {
+            if (!this._enabled || !this._history) return;
 
-        // need jsonify
-        // if (value instanceof Observer)
-        //     value = value.json();
+            // need jsonify
+            // if (value instanceof Observer)
+            //     value = value.json();
 
-        // action
-        var action = {
-            name: self._prefix + path,
-            combine: self._combine,
-            undo: function () {
-                var item = self.item.latest();
-                if (!item) return;
+            // action
+            const action = {
+                name: this._prefix + path,
+                combine: this._combine,
+                undo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-                item.history.enabled = false;
-                item.removeValue(path, value);
-                item.history.enabled = true;
-            },
-            redo: function () {
-                var item = self.item.latest();
-                if (!item) return;
+                    item.history.enabled = false;
+                    item.insert(path, value, ind);
+                    item.history.enabled = true;
+                },
+                redo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-                item.history.enabled = false;
-                item.insert(path, value, ind);
-                item.history.enabled = true;
-            }
-        };
+                    item.history.enabled = false;
+                    item.removeValue(path, value);
+                    item.history.enabled = true;
+                }
+            };
 
-        self._history.add(action);
-    }));
+            this._history.add(action);
+        }));
 
-    this._events.push(this.item.on('*:remove', function (path, value, ind) {
-        if (!self._enabled || !self._history) return;
+        this._events.push(this.item.on('*:move', (path, value, ind, indOld) => {
+            if (!this._enabled || !this._history) return;
 
-        // need jsonify
-        // if (value instanceof Observer)
-        //     value = value.json();
+            // action
+            const action = {
+                name: this._prefix + path,
+                combine: this._combine,
+                undo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-        // action
-        var action = {
-            name: self._prefix + path,
-            combine: self._combine,
-            undo: function () {
-                var item = self.item.latest();
-                if (!item) return;
+                    item.history.enabled = false;
+                    item.move(path, ind, indOld);
+                    item.history.enabled = true;
+                },
+                redo: () => {
+                    const item = this.item.latest();
+                    if (!item) return;
 
-                item.history.enabled = false;
-                item.insert(path, value, ind);
-                item.history.enabled = true;
-            },
-            redo: function () {
-                var item = self.item.latest();
-                if (!item) return;
+                    item.history.enabled = false;
+                    item.move(path, indOld, ind);
+                    item.history.enabled = true;
+                }
+            };
 
-                item.history.enabled = false;
-                item.removeValue(path, value);
-                item.history.enabled = true;
-            }
-        };
+            this._history.add(action);
+        }));
+    }
 
-        self._history.add(action);
-    }));
+    destroy() {
+        this._events.forEach((evt) => {
+            evt.unbind();
+        });
 
-    this._events.push(this.item.on('*:move', function (path, value, ind, indOld) {
-        if (!self._enabled || !self._history) return;
+        this._events.length = 0;
+        this.item = null;
+    }
 
-        // action
-        var action = {
-            name: self._prefix + path,
-            combine: self._combine,
-            undo: function () {
-                var item = self.item.latest();
-                if (!item) return;
-
-                item.history.enabled = false;
-                item.move(path, ind, indOld);
-                item.history.enabled = true;
-            },
-            redo: function () {
-                var item = self.item.latest();
-                if (!item) return;
-
-                item.history.enabled = false;
-                item.move(path, indOld, ind);
-                item.history.enabled = true;
-            }
-        };
-
-        self._history.add(action);
-    }));
-};
-
-ObserverHistory.prototype.destroy = function () {
-    this._events.forEach(function (evt) {
-        evt.unbind();
-    });
-
-    this._events.length = 0;
-    this.item = null;
-};
-
-Object.defineProperty(ObserverHistory.prototype, 'enabled', {
-    get: function () {
+    /**
+     * @type {boolean}
+     */
+    get enabled() {
         return this._enabled;
-    },
-    set: function (value) {
+    }
+
+    set enabled(value) {
         this._enabled = !!value;
     }
-});
 
-
-Object.defineProperty(ObserverHistory.prototype, 'prefix', {
-    get: function () {
+    /**
+     * @type {string}
+     */
+    get prefix() {
         return this._prefix;
-    },
-    set: function (value) {
+    }
+
+    set prefix(value) {
         this._prefix = value || '';
     }
-});
 
-Object.defineProperty(ObserverHistory.prototype, 'combine', {
-    get: function () {
+    /**
+     * @type {boolean}
+     */
+    get combine() {
         return this._combine;
-    },
-    set: function (value) {
-        this._combine = !! value;
     }
-});
+
+    set combine(value) {
+        this._combine = !!value;
+    }
+}
 
 export default ObserverHistory;

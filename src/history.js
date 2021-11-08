@@ -1,4 +1,4 @@
-import Events from './events';
+import Events from './events.js';
 
 /**
  * @name HistoryAction
@@ -13,21 +13,17 @@ import Events from './events';
  */
 
 /**
- * @name History
- * @class
- * @classdesc Manages history actions for undo / redo operations.
- * @property {HistoryAction} currentAction Returns the current history action
- * @property {HistoryAction} lastAction Returns the last history action
- * @property {boolean} canUndo Whether we can undo at this time.
- * @property {boolean} canRedo Whether we can redo at this time.
+ * Manages history actions for undo / redo operations.
+ *
  * @augments Events
  */
 class History extends Events {
     /**
-     * Creates a new pcui.History.
+     * Creates a new History.
      */
     constructor() {
         super();
+
         this._actions = [];
         this._currentActionIndex = -1;
         this._canUndo = false;
@@ -35,8 +31,8 @@ class History extends Events {
     }
 
     /**
-     * @name History#add
-     * @description Adds a new history action
+     * Adds a new history action
+     *
      * @param {HistoryAction} action - The action
      */
     add(action) {
@@ -79,8 +75,7 @@ class History extends Events {
     }
 
     /**
-     * @name History#undo
-     * @description Undo the last history action
+     * Undo the last history action
      */
     undo() {
         if (!this.canUndo) return;
@@ -107,8 +102,7 @@ class History extends Events {
     }
 
     /**
-     * @name History#redo
-     * @description Redo the current history action
+     * Redo the current history action
      */
     redo() {
         if (!this.canRedo) return;
@@ -133,11 +127,10 @@ class History extends Events {
     }
 
     /**
-     * @name History#clear
-     * @description Clears all history actions.
+     * Clears all history actions.
      */
     clear() {
-        if (! this._actions.length) return;
+        if (!this._actions.length) return;
 
         this._actions.length = 0;
         this._currentActionIndex = -1;
@@ -146,14 +139,29 @@ class History extends Events {
         this.canRedo = false;
     }
 
+    /**
+     * The current history action.
+     *
+     * @type {HistoryAction}
+     */
     get currentAction() {
         return this._actions[this._currentActionIndex] || null;
     }
 
+    /**
+     * The last action committed to the history.
+     *
+     * @type {HistoryAction}
+     */
     get lastAction() {
         return this._actions[this._actions.length - 1] || null;
     }
 
+    /**
+     * Whether we can undo at this time.
+     *
+     * @type {boolean}
+     */
     get canUndo() {
         return this._canUndo;
     }
@@ -164,6 +172,11 @@ class History extends Events {
         this.emit('canUndo', value);
     }
 
+    /**
+     * Whether we can redo at this time.
+     *
+     * @type {boolean}
+     */
     get canRedo() {
         return this._canRedo;
     }
