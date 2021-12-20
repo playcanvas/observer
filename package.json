@@ -48,6 +48,6 @@
     "lint": "eslint --ext .js index.js src rollup.config.js",
     "publish:observer": "npm run build && npm run tsd && cp ./package.json dist && cp ./LICENSE dist && cp README.md dist && npm publish dist",
     "test": "mocha",
-    "tsd": "jsdoc -c conf-tsd.json"
+    "tsd": "jsdoc -c conf-tsd.json && node tsd.js"
   }
 }
