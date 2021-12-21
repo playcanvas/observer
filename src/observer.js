@@ -7,8 +7,8 @@ import Events from './events.js';
  */
 class Observer extends Events {
     /**
-     * @param {any} data - Data
-     * @param {any} options - Options
+     * @param {any} [data] - Data
+     * @param {any} [options] - Options
      */
     constructor(data, options = {}) {
         super();
