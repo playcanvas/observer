@@ -202,34 +202,34 @@ class ObserverHistory extends Events {
     /**
      * @type {boolean}
      */
-    get enabled() {
-        return this._enabled;
-    }
-
     set enabled(value) {
         this._enabled = !!value;
+    }
+
+    get enabled() {
+        return this._enabled;
     }
 
     /**
      * @type {string}
      */
-    get prefix() {
-        return this._prefix;
-    }
-
     set prefix(value) {
         this._prefix = value || '';
+    }
+
+    get prefix() {
+        return this._prefix;
     }
 
     /**
      * @type {boolean}
      */
-    get combine() {
-        return this._combine;
-    }
-
     set combine(value) {
         this._combine = !!value;
+    }
+
+    get combine() {
+        return this._combine;
     }
 }
 

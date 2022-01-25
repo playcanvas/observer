@@ -34,12 +34,12 @@ class Events {
         this._additionalEmitters = [];
     }
 
-    get suspendEvents() {
-        return this._suspendEvents;
-    }
-
     set suspendEvents(value) {
         this._suspendEvents = !!value;
+    }
+
+    get suspendEvents() {
+        return this._suspendEvents;
     }
 
     /**

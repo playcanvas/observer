@@ -162,14 +162,14 @@ class History extends Events {
      *
      * @type {boolean}
      */
-    get canUndo() {
-        return this._canUndo;
-    }
-
     set canUndo(value) {
         if (this._canUndo === value) return;
         this._canUndo = value;
         this.emit('canUndo', value);
+    }
+
+    get canUndo() {
+        return this._canUndo;
     }
 
     /**
@@ -177,14 +177,14 @@ class History extends Events {
      *
      * @type {boolean}
      */
-    get canRedo() {
-        return this._canRedo;
-    }
-
     set canRedo(value) {
         if (this._canRedo === value) return;
         this._canRedo = value;
         this.emit('canRedo', value);
+    }
+
+    get canRedo() {
+        return this._canRedo;
     }
 }
 

@@ -955,12 +955,12 @@ class Observer extends Events {
         this.unbind();
     }
 
-    get latestFn() {
-        return this._latestFn;
-    }
-
     set latestFn(value) {
         this._latestFn = value;
+    }
+
+    get latestFn() {
+        return this._latestFn;
     }
 }
 
