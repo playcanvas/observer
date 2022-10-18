@@ -34,6 +34,11 @@ class Events {
         this._additionalEmitters = [];
     }
 
+    /**
+     * If true the observer will not emit events when values are set.
+     *
+     * @type {boolean}
+     */
     set suspendEvents(value) {
         this._suspendEvents = !!value;
     }
