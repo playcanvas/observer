@@ -28,7 +28,7 @@ class History extends Events {
         this._currentActionIndex = -1;
         this._canUndo = false;
         this._canRedo = false;
-        this._executing = false;
+        this._executing = 0;
     }
 
     /**
@@ -88,9 +88,12 @@ class History extends Events {
     async addExecute(action) {
         if (this.add(action)) {
             // execute an action - don't allow history actions till it finishes
-            this.executing = true;
-            await action.redo();
-            this.executing = false;
+            try {
+                this.executing++;
+                await action.redo();
+            } finally {
+                this.executing--;
+            }
         }
     }
 
@@ -98,7 +101,8 @@ class History extends Events {
      * Undo the last history action
      */
     async undo() {
-        if (!this.canUndo) return;
+        if (!this.canUndo)
+            return;
 
         const name = this.currentAction.name;
         const undo = this.currentAction.undo;
@@ -114,12 +118,13 @@ class History extends Events {
 
         // execute an undo action - don't allow history actions till it finishes
         try {
-            this.executing = true;
+            this.executing++;
             await undo();
-            this.executing = false;
         } catch (ex) {
             console.info('%c(pcui.History#undo)', 'color: #f00');
             console.log(ex.stack);
+        } finally {
+            this.executing--;
         }
     }
 
@@ -127,7 +132,8 @@ class History extends Events {
      * Redo the current history action
      */
     async redo() {
-        if (!this.canRedo) return;
+        if (!this.canRedo)
+            return;
 
         this._currentActionIndex++;
         const redo = this.currentAction.redo;
@@ -141,13 +147,13 @@ class History extends Events {
 
         // execute redo action - don't allow history actions till it finishes
         try {
-            this.executing = true;
+            this.executing++;
             await redo();
-            this.executing = false;
-
         } catch (ex) {
             console.info('%c(pcui.History#redo)', 'color: #f00');
             console.log(ex.stack);
+        } finally {
+            this.executing--;
         }
     }
 
