@@ -35,6 +35,7 @@ class History extends Events {
      * Adds a new history action
      *
      * @param {HistoryAction} action - The action
+     * @returns {boolean} - Returns `true` if an action is added
      */
     add(action) {
         if (!action.name) {
@@ -84,14 +85,14 @@ class History extends Events {
      * @param {HistoryAction.undo} undo - function to execute undo operation
      * @param {HistoryAction.redo} redo - function to execute redo operation
      */
-     async addExecute(action) {
+    async addExecute(action) {
         if (this.add(action)) {
             // execute an action - don't allow history actions till it finishes
             this.executing = true;
             await action.redo();
             this.executing = false;
         }
-    }    
+    }
 
     /**
      * Undo the last history action
@@ -109,19 +110,17 @@ class History extends Events {
             this.canUndo = false;
         }
 
-        this.canRedo = true;        
+        this.canRedo = true;
 
-        // execute an undo action - don't allow history actions till it finishes        
+        // execute an undo action - don't allow history actions till it finishes
         try {
-            
-            this.executing = true; 
+            this.executing = true;
             await undo();
             this.executing = false;
         } catch (ex) {
             console.info('%c(pcui.History#undo)', 'color: #f00');
             console.log(ex.stack);
-            return;
-        }        
+        }
     }
 
     /**
@@ -140,9 +139,8 @@ class History extends Events {
             this.canRedo = false;
         }
 
-        // execute redo action - don't allow history actions till it finishes        
+        // execute redo action - don't allow history actions till it finishes
         try {
-            
             this.executing = true;
             await redo();
             this.executing = false;
@@ -150,8 +148,7 @@ class History extends Events {
         } catch (ex) {
             console.info('%c(pcui.History#redo)', 'color: #f00');
             console.log(ex.stack);
-            return;
-        }        
+        }
     }
 
     /**
@@ -224,14 +221,13 @@ class History extends Events {
      *
      * @type {boolean}
      */
-     set executing(value) {
+    set executing(value) {
         if (this._executing === value) return;
         this._executing = value;
         if (this._executing) {
             this.emit('canUndo', false);
             this.emit('canRedo', false);
-        }
-        else {
+        } else {
             this.emit('canUndo', this._canUndo);
             this.emit('canRedo', this._canRedo);
         }
@@ -239,7 +235,7 @@ class History extends Events {
 
     get executing() {
         return this._executing;
-    }    
+    }
 }
 
 export default History;
