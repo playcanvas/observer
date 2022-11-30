@@ -21,6 +21,8 @@ class History extends Events {
     /**
      * Creates a new History.
      */
+    #executingCounter = 0;
+
     constructor() {
         super();
 
@@ -28,7 +30,7 @@ class History extends Events {
         this._currentActionIndex = -1;
         this._canUndo = false;
         this._canRedo = false;
-        this._executing = 0;
+
     }
 
     /**
@@ -89,10 +91,10 @@ class History extends Events {
         if (this.add(action)) {
             // execute an action - don't allow history actions till it finishes
             try {
-                this.executing++;
+                this.#executing++;
                 await action.redo();
             } finally {
-                this.executing--;
+                this.#executing--;
             }
         }
     }
@@ -118,13 +120,13 @@ class History extends Events {
 
         // execute an undo action - don't allow history actions till it finishes
         try {
-            this.executing++;
+            this.#executing++;
             await undo();
         } catch (ex) {
             console.info('%c(pcui.History#undo)', 'color: #f00');
             console.log(ex.stack);
         } finally {
-            this.executing--;
+            this.#executing--;
         }
     }
 
@@ -147,13 +149,13 @@ class History extends Events {
 
         // execute redo action - don't allow history actions till it finishes
         try {
-            this.executing++;
+            this.#executing++;
             await redo();
         } catch (ex) {
             console.info('%c(pcui.History#redo)', 'color: #f00');
             console.log(ex.stack);
         } finally {
-            this.executing--;
+            this.#executing--;
         }
     }
 
@@ -196,13 +198,13 @@ class History extends Events {
     set canUndo(value) {
         if (this._canUndo === value) return;
         this._canUndo = value;
-        if (!this._executing) {
+        if (!this.#executing) {
             this.emit('canUndo', value);
         }
     }
 
     get canUndo() {
-        return this._canUndo && !this._executing;
+        return this._canUndo && !this.#executing;
     }
 
     /**
@@ -213,13 +215,13 @@ class History extends Events {
     set canRedo(value) {
         if (this._canRedo === value) return;
         this._canRedo = value;
-        if (!this._executing) {
+        if (!this.#executing) {
             this.emit('canRedo', value);
         }
     }
 
     get canRedo() {
-        return this._canRedo && !this._executing;
+        return this._canRedo && !this.#executing;
     }
 
     /**
@@ -227,10 +229,11 @@ class History extends Events {
      *
      * @type {boolean}
      */
-    set executing(value) {
-        if (this._executing === value) return;
-        this._executing = value;
-        if (this._executing) {
+    set #executing(value) {
+        if (this.#executingCounter === value) return;
+        this.#executingCounter = value;
+
+        if (this.#executingCounter) {
             this.emit('canUndo', false);
             this.emit('canRedo', false);
         } else {
@@ -239,8 +242,8 @@ class History extends Events {
         }
     }
 
-    get executing() {
-        return this._executing;
+    get #executing() {
+        return this.#executingCounter;
     }
 }
 
