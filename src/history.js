@@ -85,7 +85,7 @@ class History extends Events {
      * @param {HistoryAction.undo} undo - function to execute undo operation
      * @param {HistoryAction.redo} redo - function to execute redo operation
      */
-    async addExecute(action) {
+    async addAndExecute(action) {
         if (this.add(action)) {
             // execute an action - don't allow history actions till it finishes
             try {
