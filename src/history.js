@@ -21,6 +21,8 @@ class History extends Events {
     /**
      * Creates a new History.
      */
+    _executing = 0;
+
     constructor() {
         super();
 
@@ -28,27 +30,29 @@ class History extends Events {
         this._currentActionIndex = -1;
         this._canUndo = false;
         this._canRedo = false;
+
     }
 
     /**
      * Adds a new history action
      *
      * @param {HistoryAction} action - The action
+     * @returns {boolean} - Returns `true` if an action is added
      */
     add(action) {
         if (!action.name) {
             console.error('Trying to add history action without name');
-            return;
+            return false;
         }
 
         if (!action.undo) {
             console.error('Trying to add history action without undo method', action.name);
-            return;
+            return false;
         }
 
         if (!action.redo) {
             console.error('Trying to add history action without redo method', action.name);
-            return;
+            return false;
         }
 
         // if we are adding an action
@@ -72,24 +76,38 @@ class History extends Events {
 
         this.canUndo = true;
         this.canRedo = false;
+
+        return true;
+    }
+
+    /**
+     * Add a new history action and execute redo after that
+     *
+     * @param {HistoryAction} action - The action
+     * @param {HistoryAction.undo} undo - function to execute undo operation
+     * @param {HistoryAction.redo} redo - function to execute redo operation
+     */
+    async addAndExecute(action) {
+        if (this.add(action)) {
+            // execute an action - don't allow history actions till it finishes
+            try {
+                this.executing++;
+                await action.redo();
+            } finally {
+                this.executing--;
+            }
+        }
     }
 
     /**
      * Undo the last history action
      */
-    undo() {
-        if (!this.canUndo) return;
+    async undo() {
+        if (!this.canUndo)
+            return;
 
         const name = this.currentAction.name;
-
-        try {
-            this.currentAction.undo();
-        } catch (ex) {
-            console.info('%c(pcui.History#undo)', 'color: #f00');
-            console.log(ex.stack);
-            return;
-        }
-
+        const undo = this.currentAction.undo;
         this._currentActionIndex--;
 
         this.emit('undo', name);
@@ -99,30 +117,45 @@ class History extends Events {
         }
 
         this.canRedo = true;
+
+        // execute an undo action - don't allow history actions till it finishes
+        try {
+            this.executing++;
+            await undo();
+        } catch (ex) {
+            console.info('%c(pcui.History#undo)', 'color: #f00');
+            console.log(ex.stack);
+        } finally {
+            this.executing--;
+        }
     }
 
     /**
      * Redo the current history action
      */
-    redo() {
-        if (!this.canRedo) return;
+    async redo() {
+        if (!this.canRedo)
+            return;
 
         this._currentActionIndex++;
-
-        try {
-            this.currentAction.redo();
-        } catch (ex) {
-            console.info('%c(pcui.History#redo)', 'color: #f00');
-            console.log(ex.stack);
-            return;
-        }
-
+        const redo = this.currentAction.redo;
         this.emit('redo', this.currentAction.name);
 
         this.canUndo = true;
 
         if (this._currentActionIndex === this._actions.length - 1) {
             this.canRedo = false;
+        }
+
+        // execute redo action - don't allow history actions till it finishes
+        try {
+            this.executing++;
+            await redo();
+        } catch (ex) {
+            console.info('%c(pcui.History#redo)', 'color: #f00');
+            console.log(ex.stack);
+        } finally {
+            this.executing--;
         }
     }
 
@@ -165,11 +198,13 @@ class History extends Events {
     set canUndo(value) {
         if (this._canUndo === value) return;
         this._canUndo = value;
-        this.emit('canUndo', value);
+        if (!this.executing) {
+            this.emit('canUndo', value);
+        }
     }
 
     get canUndo() {
-        return this._canUndo;
+        return this._canUndo && !this.executing;
     }
 
     /**
@@ -180,11 +215,35 @@ class History extends Events {
     set canRedo(value) {
         if (this._canRedo === value) return;
         this._canRedo = value;
-        this.emit('canRedo', value);
+        if (!this.executing) {
+            this.emit('canRedo', value);
+        }
     }
 
     get canRedo() {
-        return this._canRedo;
+        return this._canRedo && !this.executing;
+    }
+
+    /**
+     * Whether async action is executed.
+     *
+     * @type {boolean}
+     */
+    set executing(value) {
+        if (this._executing === value) return;
+        this._executing = value;
+
+        if (this._executing) {
+            this.emit('canUndo', false);
+            this.emit('canRedo', false);
+        } else {
+            this.emit('canUndo', this._canUndo);
+            this.emit('canRedo', this._canRedo);
+        }
+    }
+
+    get executing() {
+        return this._executing;
     }
 }
 
