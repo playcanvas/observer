@@ -223,7 +223,7 @@ class History extends Events {
     }
 
     /**
-     * Set the number of async actions currently executing.
+     * he number of async actions currently executing.
      *
      * @type {number}
      */
@@ -240,11 +240,6 @@ class History extends Events {
         }
     }
 
-    /**
-     * The number of async actions currently executing.
-     *
-     * @type {number}
-     */
     get executing() {
         return this._executing;
     }
