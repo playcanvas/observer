@@ -18,11 +18,11 @@ import Events from './events.js';
  * @augments Events
  */
 class History extends Events {
+    _executing = 0;
+
     /**
      * Creates a new History.
      */
-    _executing = 0;
-
     constructor() {
         super();
 
