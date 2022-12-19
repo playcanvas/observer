@@ -208,7 +208,7 @@ class History extends Events {
     /**
      * Whether we can redo at this time.
      *
-     * @type {boolean}
+     * @type {number}
      */
     set canRedo(value) {
         if (this._canRedo === value) return;
