@@ -223,7 +223,7 @@ class History extends Events {
     }
 
     /**
-     * he number of async actions currently executing.
+     * The number of async actions currently executing.
      *
      * @type {number}
      */
