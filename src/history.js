@@ -18,11 +18,11 @@ import Events from './events.js';
  * @augments Events
  */
 class History extends Events {
+    _executing = 0;
+
     /**
      * Creates a new History.
      */
-    _executing = 0;
-
     constructor() {
         super();
 
@@ -223,9 +223,9 @@ class History extends Events {
     }
 
     /**
-     * Whether async action is executed.
+     * The number of async actions currently executing.
      *
-     * @type {boolean}
+     * @type {number}
      */
     set executing(value) {
         if (this._executing === value) return;
