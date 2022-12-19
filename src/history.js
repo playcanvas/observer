@@ -208,7 +208,7 @@ class History extends Events {
     /**
      * Whether we can redo at this time.
      *
-     * @type {number}
+     * @type {boolean}
      */
     set canRedo(value) {
         if (this._canRedo === value) return;
@@ -223,9 +223,9 @@ class History extends Events {
     }
 
     /**
-     * Whether async action is executed.
+     * Set the number of async actions currently executing.
      *
-     * @type {boolean}
+     * @type {number}
      */
     set executing(value) {
         if (this._executing === value) return;
@@ -240,6 +240,11 @@ class History extends Events {
         }
     }
 
+    /**
+     * The number of async actions currently executing.
+     *
+     * @type {number}
+     */
     get executing() {
         return this._executing;
     }
