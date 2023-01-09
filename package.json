@@ -10,6 +10,9 @@
   ],
   "license": "MIT",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
   "module": "dist/index.mjs",
   "types": "dist/observer.d.ts",
   "type": "module",
