@@ -14,7 +14,7 @@ The built file will be a UMD module located at `dist/index.js`.
 
 # Events
 
-Base class for event emitters. Allows emiting events and attaching event handlers.
+Base class for event emitters. Allows emitting events and attaching event handlers.
 
 # Observer
 
