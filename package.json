@@ -46,7 +46,7 @@
     "@rollup/plugin-babel": "^6.0.3",
     "chai": "^4.3.7",
     "eslint": "^8.37.0",
-    "jsdoc": "^4.0.2",
+    "jsdoc": "^3.6.11",
     "mocha": "^10.2.0",
     "rollup": "^3.20.2",
     "tsd-jsdoc": "2.5.0",
