@@ -89,7 +89,7 @@ class Events {
      * @returns {Events} Self for chaining.
      */
     emit(name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
-        if (this._suspendEvents) return;
+        if (this._suspendEvents) return this;
 
         let events = this._events[name];
         if (events && events.length) {

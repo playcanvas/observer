@@ -259,7 +259,7 @@ class Observer extends Events {
         if (node instanceof Array) {
             const ind = parseInt(key, 10);
             if (node[ind] === value && !force)
-                return;
+                return false;
 
             valueOld = node[ind];
             if (valueOld instanceof Observer) {
@@ -484,7 +484,7 @@ class Observer extends Events {
         const keys = Observer._splitPath(path);
         let node = this;
         for (let i = 0, len = keys.length; i < len; i++) {
-            if (node == undefined)
+            if (node == undefined) // eslint-disable-line eqeqeq
                 return undefined;
 
             if (node._data) {
@@ -506,7 +506,7 @@ class Observer extends Events {
         const keys = Observer._splitPath(path);
         let node = this;
         for (let i = 0; i < keys.length; i++) {
-            if (node == undefined)
+            if (node == undefined) // eslint-disable-line eqeqeq
                 return undefined;
 
             if (node._data) {
@@ -620,16 +620,16 @@ class Observer extends Events {
             } else if (node._data && node._data.hasOwnProperty(keys[i])) {
                 node = node._data[keys[i]];
             } else {
-                return;
+                return false;
             }
         }
 
         if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array))
-            return;
+            return false;
 
         const arr = node._data[key];
         if (arr.length < ind)
-            return;
+            return false;
 
         let value = arr[ind];
         if (value instanceof Observer) {
