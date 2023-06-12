@@ -24,7 +24,7 @@ const arrayEquals = (a, b) => {
         }
     }
     return true;
-}
+};
 
 /**
  * An observer is a class that can be used to observe changes to an object.
