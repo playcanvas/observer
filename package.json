@@ -55,7 +55,7 @@
     "build:es6": "rollup -c --environment target:es6",
     "build:umd": "rollup -c --environment target:umd",
     "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly --outDir types",
-    "lint": "eslint --ext .js index.js src rollup.config.js",
+    "lint": "eslint --ext .js src rollup.config.js",
     "publish:observer": "npm run build && npm run build:types && npm publish",
     "test": "mocha"
   }
