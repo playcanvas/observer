@@ -34,9 +34,9 @@
     "dist/index.js",
     "dist/index.mjs",
     "types",
+    "LICENSE",
     "package.json",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "devDependencies": {
     "@babel/core": "^7.21.4",
