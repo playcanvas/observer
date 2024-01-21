@@ -14,7 +14,7 @@
     ".": "./dist/index.mjs"
   },
   "module": "dist/index.mjs",
-  "types": "dist/observer.d.ts",
+  "types": "types/index.d.ts",
   "type": "module",
   "bugs": {
     "url": "https://github.com/playcanvas/playcanvas-observer/issues"
@@ -31,12 +31,11 @@
     }
   },
   "files": [
-    "dist/index.js",
-    "dist/index.mjs",
-    "dist/observer.d.ts",
-    "LICENSE",
+    "dist",
+    "types",
     "package.json",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "devDependencies": {
     "@babel/core": "^7.21.4",
@@ -46,19 +45,17 @@
     "@rollup/plugin-babel": "^6.0.3",
     "chai": "^4.3.7",
     "eslint": "^8.37.0",
-    "jsdoc": "^3.6.11",
     "mocha": "^10.2.0",
     "rollup": "^3.20.2",
-    "tsd-jsdoc": "2.5.0",
     "typescript": "^5.0.3"
   },
   "scripts": {
-    "build:umd": "rollup -c --environment target:umd",
-    "build:es6": "rollup -c --environment target:es6",
     "build": "rollup -c --environment target:all",
+    "build:es6": "rollup -c --environment target:es6",
+    "build:umd": "rollup -c --environment target:umd",
+    "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly --outDir types",
     "lint": "eslint --ext .js index.js src rollup.config.js",
-    "publish:observer": "npm run build && npm run tsd && npm publish",
-    "test": "mocha",
-    "tsd": "jsdoc -c conf-tsd.json && node tsd.js"
+    "publish:observer": "npm run build && npm run build:types && npm publish",
+    "test": "mocha"
   }
 }
