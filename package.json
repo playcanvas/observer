@@ -31,7 +31,8 @@
     }
   },
   "files": [
-    "dist",
+    "dist/index.js",
+    "dist/index.mjs",
     "types",
     "package.json",
     "README.md",
