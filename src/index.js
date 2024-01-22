@@ -8,11 +8,11 @@
  * @module Observer
  */
 
-import Events from './src/events';
-import Observer from './src/observer';
-import ObserverList from './src/observer-list';
-import History from './src/history';
-import ObserverHistory from './src/observer-history';
+import Events from './events.js';
+import Observer from './observer.js';
+import ObserverList from './observer-list.js';
+import History from './history.js';
+import ObserverHistory from './observer-history.js';
 
 export {
     Events,

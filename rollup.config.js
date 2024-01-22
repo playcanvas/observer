@@ -40,7 +40,7 @@ const moduleOptions = {
 };
 
 const umd = {
-    input: 'index.js',
+    input: 'src/index.js',
     output: {
         file: 'dist/index.js',
         format: 'umd',
@@ -52,7 +52,7 @@ const umd = {
 };
 
 const es6 = {
-    input: 'index.js',
+    input: 'src/index.js',
     output: {
         file: 'dist/index.mjs',
         format: 'module'
