@@ -1,5 +1,7 @@
 class EventHandle {
     /**
+     * Creates an instance of EventHandle.
+     *
      * @param {Events} owner - Owner
      * @param {string} name - Name
      * @param {HandleEvent} fn - Callback function
@@ -11,6 +13,9 @@ class EventHandle {
     }
 
     /**
+     * Unbinds the event handle from the owner, effectively removing the event listener. After
+     * calling this method, the event handle will no longer trigger the callback function when the
+     * event is emitted.
      */
     unbind() {
         if (!this.owner)
@@ -24,6 +29,8 @@ class EventHandle {
     }
 
     /**
+     * Invokes the callback function associated with the event handle. This method directly
+     * triggers the event's callback without the event being emitted by the event system.
      */
     call() {
         if (!this.fn)
@@ -33,6 +40,9 @@ class EventHandle {
     }
 
     /**
+     * Registers a new event listener on the same owner as the EventHandle. This method allows
+     * chaining additional event listeners to the owner of this event handle.
+     *
      * @param {string} name - Name
      * @param {HandleEvent} fn - Callback function
      * @returns {EventHandle} - EventHandle
