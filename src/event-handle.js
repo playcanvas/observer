@@ -1,3 +1,9 @@
+/**
+ * EventHandle manages the binding and unbinding of event listeners. It provides a convenient way
+ * to add, remove, and invoke event handlers associated with specific event names. Each EventHandle
+ * is linked to an 'owner' object, typically an instance of the Events class, allowing for elegant
+ * event management and chaining.
+ */
 class EventHandle {
     /**
      * Creates an instance of EventHandle.
