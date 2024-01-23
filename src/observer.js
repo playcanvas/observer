@@ -626,7 +626,7 @@ class Observer extends Events {
     /**
      * @param {string} path - Path to the value.
      * @param {number} ind - Index of the value.
-     * @param {boolean} [silent=false] - If true, the remove event will not be emitted.
+     * @param {boolean} [silent] - If true, the remove event will not be emitted.
      * @param {boolean} [remote] - TODO.
      * @returns {boolean} Returns true if the value was successfully removed and false otherwise.
      */
