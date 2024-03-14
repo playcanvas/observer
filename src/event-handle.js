@@ -4,7 +4,7 @@
  * is linked to an 'owner' object, typically an instance of the Events class, allowing for elegant
  * event management and chaining.
  *
- * @hidden
+ * @ignore
  */
 class EventHandle {
     /**
