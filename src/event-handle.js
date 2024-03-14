@@ -3,7 +3,7 @@
  * to add, remove, and invoke event handlers associated with specific event names. Each EventHandle
  * is linked to an 'owner' object, typically an instance of the Events class, allowing for elegant
  * event management and chaining.
- * 
+ *
  * @hidden
  */
 class EventHandle {
