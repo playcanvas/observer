@@ -39,16 +39,16 @@
     "README.md"
   ],
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/eslint-parser": "^7.23.3",
-    "@babel/preset-env": "^7.23.8",
+    "@babel/core": "^7.24.5",
+    "@babel/eslint-parser": "^7.24.5",
+    "@babel/preset-env": "^7.24.5",
     "@playcanvas/eslint-config": "^1.7.1",
     "@rollup/plugin-babel": "^6.0.4",
-    "chai": "^5.0.0",
+    "chai": "^5.1.0",
     "eslint": "^8.56.0",
-    "mocha": "^10.2.0",
-    "rollup": "^4.9.6",
-    "typescript": "^5.3.3"
+    "mocha": "^10.4.0",
+    "rollup": "^4.17.1",
+    "typescript": "^5.4.5"
   },
   "scripts": {
     "build": "rollup -c --environment target:all",
