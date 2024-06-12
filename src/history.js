@@ -189,7 +189,7 @@ class History extends Events {
     }
 
     /**
-     * Whether we can undo at this time.
+     * Sets whether we can undo at this time.
      *
      * @type {boolean}
      */
@@ -201,12 +201,17 @@ class History extends Events {
         }
     }
 
+    /**
+     * Gets whether we can undo at this time.
+     *
+     * @type {boolean}
+     */
     get canUndo() {
         return this._canUndo && !this.executing;
     }
 
     /**
-     * Whether we can redo at this time.
+     * Sets whether we can redo at this time.
      *
      * @type {boolean}
      */
@@ -218,12 +223,17 @@ class History extends Events {
         }
     }
 
+    /**
+     * Gets whether we can redo at this time.
+     *
+     * @type {boolean}
+     */
     get canRedo() {
         return this._canRedo && !this.executing;
     }
 
     /**
-     * The number of async actions currently executing.
+     * Sets the number of async actions currently executing.
      *
      * @type {number}
      */
@@ -240,6 +250,11 @@ class History extends Events {
         }
     }
 
+    /**
+     * Gets the number of async actions currently executing.
+     *
+     * @type {number}
+     */
     get executing() {
         return this._executing;
     }

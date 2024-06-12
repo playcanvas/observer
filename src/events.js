@@ -35,7 +35,8 @@ class Events {
     }
 
     /**
-     * If true the observer will not emit events when values are set.
+     * Sets whether events are suspended. If true, the observer will not emit events when values
+     * are set.
      *
      * @type {boolean}
      */
@@ -43,6 +44,11 @@ class Events {
         this._suspendEvents = !!value;
     }
 
+    /**
+     * Gets whether events are suspended.
+     *
+     * @type {boolean}
+     */
     get suspendEvents() {
         return this._suspendEvents;
     }

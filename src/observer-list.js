@@ -4,7 +4,7 @@ import Observer from './observer.js';
 /**
  * A list of observers.
  *
- * @augments Events
+ * @ignore
  */
 class ObserverList extends Events {
     /**
