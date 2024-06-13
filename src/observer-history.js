@@ -3,8 +3,6 @@ import Observer from './observer.js';
 
 /**
  * History for an observer.
- *
- * @augments Events
  */
 class ObserverHistory extends Events {
     /**

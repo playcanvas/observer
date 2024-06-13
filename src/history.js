@@ -14,8 +14,6 @@ import Events from './events.js';
 
 /**
  * Manages history actions for undo / redo operations.
- *
- * @augments Events
  */
 class History extends Events {
     _executing = 0;
