@@ -13,7 +13,7 @@ To install the NPM package, do:
 ### Creating an Observer
 
 ```javascript
-import Observer from 'playcanvas-observer';
+import Observer from '@playcanvas/observer';
 
 const data = {
     name: 'John',
