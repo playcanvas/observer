@@ -27,12 +27,35 @@ const arrayEquals = (a, b) => {
 };
 
 /**
- * An observer is a class that can be used to observe changes to an object.
+ * The Observer class is used to observe and manage changes to an object. It allows for tracking
+ * modifications to nested properties, emitting events on changes, and maintaining state
+ * consistency. This is particularly useful in applications where state management and change
+ * tracking are critical, such as in data-driven interfaces or collaborative applications.
+ *
+ * @example
+ * const data = {
+ *   name: 'John',
+ *   age: 30,
+ *   address: {
+ *     city: 'New York',
+ *     zip: '10001'
+ *   }
+ * };
+ *
+ * const observer = new Observer(data);
+ *
+ * observer.on('name:set', (newValue, oldValue) => {
+ *   console.log(`Name changed from ${oldValue} to ${newValue}`);
+ * });
+ *
+ * observer.set('name', 'Jane'); // Logs: Name changed from John to Jane
  */
 class Observer extends Events {
     /**
-     * @param {any} [data] - Data
-     * @param {any} [options] - Options
+     * Creates a new Observer instance.
+     *
+     * @param {object} [data] - The initial data to observe.
+     * @param {object} [options] - Additional options for the observer.
      */
     constructor(data, options = {}) {
         super();
