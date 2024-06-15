@@ -1,30 +1,14 @@
 {
     "compilerOptions": {
-        "noImplicitAny": true,
         "allowJs": true,
-        "target": "es6",
-        "jsx": "react",
         "lib": [
             "es2019",
             "dom",
             "dom.iterable"
         ],
-        "esModuleInterop" : true,
-        "sourceMap": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "target": "es6"
     },
-    "typedocOptions": {
-        "entryPoints": ["./src/index.js"],
-        "exclude": "**/node_modules/**",
-        "externalPattern": "**/node_modules/**",
-        "excludeInternal": false,
-        "excludePrivate": true,
-        "excludeNotDocumented": true,
-        "name": "Home",
-        "out": "typedocs",
-        "readme": "none",
-        "sort": "source-order"
-    },
-    "include": ["./src/index.js"],
-    "exclude": ["node_modules/**/*", "node_modules"]
+    "include": ["./src/index.js"]
 }
