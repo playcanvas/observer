@@ -1,14 +1,12 @@
 import Events from './events.js';
 
 /**
- * @name HistoryAction
- * @class
- * @classdesc A history action
- * @property {string} name The name of the action
- * @property {Function} undo The undo function
- * @property {Function} redo The redo function
- * @property {boolean} combine Whether to combine with the previous action with the same name.
- * The effect of combining is merely changing the redo function to be the redo function of this action.
+ * @typedef {object} HistoryAction
+ * @property {string} name - The action name.
+ * @property {Function} undo - The undo function.
+ * @property {Function} redo - The redo function.
+ * @property {boolean} combine Whether to combine with the previous action with the same name. The
+ * effect of combining is merely changing the redo function to be the redo function of this action.
  * The original undo function is not modified.
  */
 
