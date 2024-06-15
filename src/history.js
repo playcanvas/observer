@@ -17,20 +17,20 @@ import Events from './events.js';
  *
  * @example
  * const history = new History();
- * 
+ *
  * // Define an action
  * const action = {
  *   name: 'draw',
  *   undo: () => { console.log('Undo draw'); },
  *   redo: () => { console.log('Redo draw'); }
  * };
- * 
+ *
  * // Add the action to history
  * history.add(action);
- * 
+ *
  * // Perform undo
  * history.undo();
- * 
+ *
  * // Perform redo
  * history.redo();
  */
