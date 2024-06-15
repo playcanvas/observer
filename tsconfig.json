@@ -10,6 +10,5 @@
         "noImplicitAny": true,
         "target": "es6"
     },
-    "include": ["./src/index.js"],
-    "exclude": ["node_modules/**/*", "node_modules"]
+    "include": ["./src/index.js"]
 }
