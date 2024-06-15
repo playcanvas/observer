@@ -1,33 +1,57 @@
 # Overview
 
-This repository contains classes used across the PlayCanvas Editor and PCUI. These classes are used in data binding and history (undo, redo).
+The PlayCanvas Observer is a powerful JavaScript library for managing and observing changes to objects. It allows tracking modifications to nested properties, emitting events on changes, and maintaining state consistency. This is particularly useful in applications where state management and change tracking are critical, such as in data-driven interfaces or collaborative applications.
 
-# Installing
+## Installing
 
-To build a UMD module of the library run:
+To install the NPM package, do:
+
+    npm install @playcanvas/observer --save-dev
+
+## Usage
+
+### Creating an Observer
+
+```javascript
+import Observer from 'playcanvas-observer';
+
+const data = {
+    name: 'John',
+    age: 30,
+    address: {
+        city: 'New York',
+        zip: '10001'
+    }
+};
+
+const observer = new Observer(data);
 ```
-npm install
-npm run build
+
+### Listening for Changes
+
+You can listen for changes to specific properties using the `on` method:
+
+```javascript
+observer.on('address.city:set', (newValue, oldValue) => {
+    console.log(`City changed from ${oldValue} to ${newValue}`);
+});
+
+observer.set('address.city', 'San Francisco'); // Logs: City changed from New York to San Francisco
 ```
 
-The built file will be a UMD module located at `dist/index.js`.
+## Building
 
-# Events
+To generate a UMD and ESM build of the Observer library, run:
 
-Base class for event emitters. Allows emitting events and attaching event handlers.
+    npm install
+    npm run build
 
-# Observer
+The UMD build is `dist/index.js`. The ESM build is `dist/index.mjs`.
 
-Responsible for editing an object that contains JSON data. The class emits events when properties change.
+## API Docs
 
-# ObserverList
+To build the API reference manual, run:
 
-A list of observers with similar functionality and events.
+    npm run docs
 
-# ObserverHistory
-
-Records undo / redo when an Observer changes.
-
-# History
-
-Responsible for keeping track of history actions (for undo / redo).
+A pre-built API reference many is hosted [here](https://api.playcanvas.com/modules/Observer.html).
