@@ -48,6 +48,10 @@
     "eslint": "^8.56.0",
     "mocha": "^10.4.0",
     "rollup": "^4.17.1",
+    "typedoc": "^0.25.13",
+    "typedoc-plugin-mdn-links": "^3.1.29",
+    "typedoc-plugin-missing-exports": "^2.3.0",
+    "typedoc-plugin-rename-defaults": "^0.7.0",
     "typescript": "^5.4.5"
   },
   "scripts": {
@@ -55,6 +59,7 @@
     "build:es6": "rollup -c --environment target:es6",
     "build:umd": "rollup -c --environment target:umd",
     "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly --outDir types",
+    "docs": "typedoc",
     "lint": "eslint --ext .js src rollup.config.js",
     "publish:observer": "npm run build && npm run build:types && npm publish",
     "test": "mocha"

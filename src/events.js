@@ -3,14 +3,14 @@ import EventHandle from './event-handle.js';
 /**
  * @callback HandleEvent
  * Callback used by {@link Events} and {@link EventHandle} functions. Note the callback is limited to 8 arguments.
- * @param {*} [arg1] - First argument that is passed from caller.
- * @param {*} [arg2] - Second argument that is passed from caller.
- * @param {*} [arg3] - Third argument that is passed from caller.
- * @param {*} [arg4] - Fourth argument that is passed from caller.
- * @param {*} [arg5] - Fifth argument that is passed from caller.
- * @param {*} [arg6] - Sixth argument that is passed from caller.
- * @param {*} [arg7] - Seventh argument that is passed from caller.
- * @param {*} [arg8] - Eighth argument that is passed from caller.
+ * @param {any} [arg1] - First argument that is passed from caller.
+ * @param {any} [arg2] - Second argument that is passed from caller.
+ * @param {any} [arg3] - Third argument that is passed from caller.
+ * @param {any} [arg4] - Fourth argument that is passed from caller.
+ * @param {any} [arg5] - Fifth argument that is passed from caller.
+ * @param {any} [arg6] - Sixth argument that is passed from caller.
+ * @param {any} [arg7] - Seventh argument that is passed from caller.
+ * @param {any} [arg8] - Eighth argument that is passed from caller.
  */
 
 /**
@@ -84,14 +84,14 @@ class Events {
 
     /**
      * @param {string} name - Name
-     * @param {*} [arg0] - First argument
-     * @param {*} [arg1] - Second argument
-     * @param {*} [arg2] - Third argument
-     * @param {*} [arg3] - Fourth argument
-     * @param {*} [arg4] - Fifth argument
-     * @param {*} [arg5] - Sixth argument
-     * @param {*} [arg6] - Seventh argument
-     * @param {*} [arg7] - Eights argument
+     * @param {any} [arg0] - First argument
+     * @param {any} [arg1] - Second argument
+     * @param {any} [arg2] - Third argument
+     * @param {any} [arg3] - Fourth argument
+     * @param {any} [arg4] - Fifth argument
+     * @param {any} [arg5] - Sixth argument
+     * @param {any} [arg6] - Seventh argument
+     * @param {any} [arg7] - Eights argument
      * @returns {Events} Self for chaining.
      */
     emit(name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
