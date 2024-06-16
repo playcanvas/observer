@@ -1,30 +1,5 @@
 import Events from './events.js';
-
-// The Observer implementation assumed this array equality function
-// was a member of Array prototype (called 'equals'). This has now
-// been moved here instead.
-const arrayEquals = (a, b) => {
-    if (!a || !b) {
-        return false;
-    }
-
-    const l = a.length;
-
-    if (l !== b.length) {
-        return false;
-    }
-
-    for (let i = 0; i < l; i++) {
-        if (a[i] instanceof Array && b[i] instanceof Array) {
-            if (!arrayEquals(a[i], b[i])) {
-                return false;
-            }
-        } else if (a[i] !== b[i]) {
-            return false;
-        }
-    }
-    return true;
-};
+import { arrayEquals } from './utils.js';
 
 /**
  * The Observer class is used to observe and manage changes to an object. It allows for tracking
