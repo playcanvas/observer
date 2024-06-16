@@ -47,6 +47,7 @@
     "chai": "^5.1.0",
     "eslint": "^8.56.0",
     "mocha": "^10.4.0",
+    "publint": "^0.2.8",
     "rollup": "^4.17.1",
     "typedoc": "^0.25.13",
     "typedoc-plugin-mdn-links": "^3.1.29",
@@ -60,6 +61,7 @@
     "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly --outDir types",
     "docs": "typedoc",
     "lint": "eslint --ext .js src rollup.config.js",
+    "publint": "publint --level error",
     "publish:observer": "npm run build && npm run build:types && npm publish",
     "test": "mocha"
   }
