@@ -14,9 +14,38 @@ import EventHandle from './event-handle.js';
  */
 
 /**
- * Base class for event handling.
+ * Base class for event handling, providing mechanisms to register, emit, and unbind events. This
+ * class supports adding event listeners, emitting events with up to 8 arguments, and managing
+ * multiple emitters.
+ *
+ * @example
+ * // Create an instance of the Events class
+ * const events = new Events();
+ *
+ * // Register an event listener
+ * events.on('testEvent', (arg1, arg2) => {
+ *     console.log('Event triggered with arguments:', arg1, arg2);
+ * });
+ *
+ * // Emit the event
+ * events.emit('testEvent', 'value1', 'value2');
+ *
+ * // Unbind the event listener
+ * events.unbind('testEvent');
  */
 class Events {
+    /** @private */
+    _suspendEvents = false;
+
+    /**
+     * @type {Events[]}
+     * @private
+     */
+    _additionalEmitters = [];
+
+    /**
+     * Creates a new Events instance.
+     */
     constructor() {
         // _world
         Object.defineProperty(
@@ -28,10 +57,6 @@ class Events {
                 value: { }
             }
         );
-
-        this._suspendEvents = false;
-
-        this._additionalEmitters = [];
     }
 
     /**
@@ -54,9 +79,21 @@ class Events {
     }
 
     /**
-     * @param {string} name - Name
-     * @param {HandleEvent} fn - Callback function
-     * @returns {EventHandle} EventHandle
+     * Registers an event listener for the specified event name. If the event is emitted,
+     * the callback function is executed with up to 8 arguments.
+     *
+     * @param {string} name - The name of the event to listen for.
+     * @param {HandleEvent} fn - The callback function to be executed when the event is emitted.
+     * @returns {EventHandle} An EventHandle object that can be used to unbind the event listener.
+     *
+     * @example
+     * // Register an event listener
+     * events.on('testEvent', (arg1, arg2) => {
+     *     console.log('Event triggered with arguments:', arg1, arg2);
+     * });
+     *
+     * // Emit the event
+     * events.emit('testEvent', 'value1', 'value2');
      */
     on(name, fn) {
         const events = this._events[name];
@@ -70,9 +107,25 @@ class Events {
     }
 
     /**
-     * @param {string} name - Name
-     * @param {HandleEvent} fn - Callback function
-     * @returns {EventHandle} EventHandle
+     * Registers a one-time event listener for the specified event name. The callback function is
+     * executed the next time the event is emitted, and then automatically unbound.
+     *
+     * @param {string} name - The name of the event to listen for.
+     * @param {HandleEvent} fn - The callback function to be executed once when the event is emitted.
+     * @returns {EventHandle} An EventHandle object that can be used to unbind the event listener
+     * before it is triggered.
+     *
+     * @example
+     * // Register a one-time event listener
+     * events.once('testEvent', (arg1, arg2) => {
+     *     console.log('Event triggered once with arguments:', arg1, arg2);
+     * });
+     *
+     * // Emit the event
+     * events.emit('testEvent', 'value1', 'value2'); // The callback will be called and then unbound.
+     *
+     * // Emit the event again
+     * events.emit('testEvent', 'value1', 'value2'); // The callback will not be called this time.
      */
     once(name, fn) {
         const evt = this.on(name, (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) => {
@@ -83,16 +136,31 @@ class Events {
     }
 
     /**
-     * @param {string} name - Name
-     * @param {any} [arg0] - First argument
-     * @param {any} [arg1] - Second argument
-     * @param {any} [arg2] - Third argument
-     * @param {any} [arg3] - Fourth argument
-     * @param {any} [arg4] - Fifth argument
-     * @param {any} [arg5] - Sixth argument
-     * @param {any} [arg6] - Seventh argument
-     * @param {any} [arg7] - Eights argument
-     * @returns {Events} Self for chaining.
+     * Emits the specified event, executing all registered listeners for that event with the
+     * provided arguments. If events are suspended, the emit operation will be ignored.
+     *
+     * @param {string} name - The name of the event to emit.
+     * @param {any} [arg0] - The first argument to pass to the event listeners.
+     * @param {any} [arg1] - The second argument to pass to the event listeners.
+     * @param {any} [arg2] - The third argument to pass to the event listeners.
+     * @param {any} [arg3] - The fourth argument to pass to the event listeners.
+     * @param {any} [arg4] - The fifth argument to pass to the event listeners.
+     * @param {any} [arg5] - The sixth argument to pass to the event listeners.
+     * @param {any} [arg6] - The seventh argument to pass to the event listeners.
+     * @param {any} [arg7] - The eighth argument to pass to the event listeners.
+     * @returns {Events} The current instance for chaining.
+     *
+     * @example
+     * // Register an event listener
+     * events.on('testEvent', (arg1, arg2) => {
+     *     console.log('Event triggered with arguments:', arg1, arg2);
+     * });
+     *
+     * // Emit the event
+     * events.emit('testEvent', 'value1', 'value2');
+     *
+     * // Emit the event with more arguments
+     * events.emit('testEvent', 'value1', 'value2', 'value3', 'value4');
      */
     emit(name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) {
         if (this._suspendEvents) return this;
@@ -125,9 +193,31 @@ class Events {
     }
 
     /**
-     * @param {string} name - Name
-     * @param {HandleEvent} fn - Callback function
-     * @returns {Events} - This
+     * Unbinds an event listener for the specified event name. If a callback function is provided,
+     * only that specific listener is removed. If no callback is provided, all listeners for the
+     * event are removed. If no event name is provided, all listeners for all events are removed.
+     *
+     * @param {string} [name] - The name of the event to unbind. If not provided, all events are
+     * unbound.
+     * @param {HandleEvent} [fn] - The specific callback function to remove. If not provided, all
+     * listeners for the event are removed.
+     * @returns {Events} The current instance for chaining.
+     *
+     * @example
+     * // Register an event listener
+     * const callback = (arg1, arg2) => {
+     *     console.log('Event triggered with arguments:', arg1, arg2);
+     * };
+     * events.on('testEvent', callback);
+     *
+     * // Unbind the specific event listener
+     * events.unbind('testEvent', callback);
+     *
+     * // Unbind all listeners for a specific event
+     * events.unbind('testEvent');
+     *
+     * // Unbind all listeners for all events
+     * events.unbind();
      */
     unbind(name, fn) {
         if (name) {
@@ -155,8 +245,8 @@ class Events {
     }
 
     /**
-     * Adds another emitter. Any events fired by this instance
-     * will also be fired on the additional emitter.
+     * Adds another emitter. Any events fired by this instance will also be fired on the additional
+     * emitter.
      *
      * @param {Events} emitter - The emitter
      */
