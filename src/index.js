@@ -8,16 +8,18 @@
  * @module Observer
  */
 
+import EventHandle from './event-handle.js';
 import Events from './events.js';
-import Observer from './observer.js';
-import ObserverList from './observer-list.js';
 import History from './history.js';
+import Observer from './observer.js';
 import ObserverHistory from './observer-history.js';
+import ObserverList from './observer-list.js';
 
 export {
+    EventHandle,
     Events,
-    Observer,
-    ObserverList,
     History,
-    ObserverHistory
+    Observer,
+    ObserverHistory,
+    ObserverList
 };

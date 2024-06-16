@@ -8,9 +8,9 @@ class EventHandle {
     /**
      * Creates an instance of EventHandle.
      *
-     * @param {Events} owner - Owner
+     * @param {import('./events.js').Events} owner - Owner
      * @param {string} name - Name
-     * @param {HandleEvent} fn - Callback function
+     * @param {import('./events.js').HandleEvent} fn - Callback function
      */
     constructor(owner, name, fn) {
         this.owner = owner;
@@ -50,7 +50,7 @@ class EventHandle {
      * chaining additional event listeners to the owner of this event handle.
      *
      * @param {string} name - Name
-     * @param {HandleEvent} fn - Callback function
+     * @param {import('./events.js').HandleEvent} fn - Callback function
      * @returns {EventHandle} - EventHandle
      */
     on(name, fn) {

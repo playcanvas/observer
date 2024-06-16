@@ -58,11 +58,12 @@
     "build": "rollup -c --environment target:all",
     "build:es6": "rollup -c --environment target:es6",
     "build:umd": "rollup -c --environment target:umd",
-    "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly --outDir types",
+    "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly",
     "docs": "typedoc",
     "lint": "eslint --ext .js src rollup.config.js",
     "publint": "publint --level error",
     "publish:observer": "npm run build && npm run build:types && npm publish",
-    "test": "mocha"
+    "test": "mocha",
+    "test:types": "tsc --pretty false types/index.d.ts"
   }
 }
