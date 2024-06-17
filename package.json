@@ -55,8 +55,8 @@
     "typescript": "^5.4.5"
   },
   "scripts": {
-    "build": "rollup -c --environment target:all",
-    "build:es6": "rollup -c --environment target:es6",
+    "build": "rollup -c",
+    "build:esm": "rollup -c --environment target:esm",
     "build:umd": "rollup -c --environment target:umd",
     "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly",
     "docs": "typedoc",

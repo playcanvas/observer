@@ -1,6 +1,6 @@
 import { babel } from '@rollup/plugin-babel';
 
-const es5Options = {
+const umdOptions = {
     babelHelpers: 'bundled',
     babelrc: false,
     comments: false,
@@ -19,7 +19,7 @@ const es5Options = {
     ]
 };
 
-const moduleOptions = {
+const esmOptions = {
     babelHelpers: 'bundled',
     babelrc: false,
     comments: false,
@@ -47,27 +47,26 @@ const umd = {
         name: 'observer'
     },
     plugins: [
-        babel(es5Options)
+        babel(umdOptions)
     ]
 };
 
-const es6 = {
+const esm = {
     input: 'src/index.js',
     output: {
         file: 'dist/index.mjs',
         format: 'module'
     },
     plugins: [
-        babel(moduleOptions)
+        babel(esmOptions)
     ]
 };
 
-let targets;
+let targets = [umd, esm];
 if (process.env.target) {
     switch (process.env.target.toLowerCase()) {
         case "umd":      targets = [umd]; break;
-        case "es6":      targets = [es6]; break;
-        case "all":      targets = [umd, es6]; break;
+        case "esm":      targets = [esm]; break;
     }
 }
 
