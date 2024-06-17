@@ -9,12 +9,16 @@
     "observer"
   ],
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./types/index.d.ts",
   "exports": {
-    ".": "./dist/index.mjs"
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   },
-  "module": "dist/index.mjs",
-  "types": "types/index.d.ts",
   "type": "module",
   "bugs": {
     "url": "https://github.com/playcanvas/observer/issues"
@@ -31,6 +35,7 @@
     }
   },
   "files": [
+    "dist/index.cjs",
     "dist/index.js",
     "dist/index.mjs",
     "types",

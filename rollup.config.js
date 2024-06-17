@@ -1,24 +1,5 @@
 import { babel } from '@rollup/plugin-babel';
 
-const umdOptions = {
-    babelHelpers: 'bundled',
-    babelrc: false,
-    comments: false,
-    compact: false,
-    minified: false,
-    presets: [
-        [
-            '@babel/preset-env', {
-                loose: true,
-                modules: false,
-                targets: {
-                    ie: "11"
-                }
-            }
-        ]
-    ]
-};
-
 const esmOptions = {
     babelHelpers: 'bundled',
     babelrc: false,
@@ -39,6 +20,25 @@ const esmOptions = {
     ]
 };
 
+const nonEsmOptions = {
+    babelHelpers: 'bundled',
+    babelrc: false,
+    comments: false,
+    compact: false,
+    minified: false,
+    presets: [
+        [
+            '@babel/preset-env', {
+                loose: true,
+                modules: false,
+                targets: {
+                    ie: "11"
+                }
+            }
+        ]
+    ]
+};
+
 const umd = {
     input: 'src/index.js',
     output: {
@@ -47,7 +47,19 @@ const umd = {
         name: 'observer'
     },
     plugins: [
-        babel(umdOptions)
+        babel(nonEsmOptions)
+    ]
+};
+
+const cjs = {
+    input: 'src/index.js',
+    output: {
+        file: 'dist/index.cjs',
+        format: 'cjs',
+        name: 'observer'
+    },
+    plugins: [
+        babel(nonEsmOptions)
     ]
 };
 
@@ -62,11 +74,12 @@ const esm = {
     ]
 };
 
-let targets = [umd, esm];
+let targets = [cjs, esm, umd];
 if (process.env.target) {
     switch (process.env.target.toLowerCase()) {
-        case "umd":      targets = [umd]; break;
+        case "cjs":      targets = [cjs]; break;
         case "esm":      targets = [esm]; break;
+        case "umd":      targets = [umd]; break;
     }
 }
 
