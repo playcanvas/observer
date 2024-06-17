@@ -1,4 +1,4 @@
-import Observer from '../src/observer.js';
+import { Observer } from '../src/observer.js';
 
 import { expect } from 'chai';
 
