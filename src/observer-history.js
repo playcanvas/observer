@@ -1,5 +1,5 @@
-import Events from './events.js';
-import Observer from './observer.js';
+import { Events } from './events.js';
+import { Observer } from './observer.js';
 
 /**
  * History for an observer.
@@ -240,4 +240,4 @@ class ObserverHistory extends Events {
     }
 }
 
-export default ObserverHistory;
+export { ObserverHistory };

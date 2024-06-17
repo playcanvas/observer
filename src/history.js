@@ -1,4 +1,4 @@
-import Events from './events.js';
+import { Events } from './events.js';
 
 /**
  * @typedef {object} HistoryAction
@@ -288,4 +288,4 @@ class History extends Events {
     }
 }
 
-export default History;
+export { History };

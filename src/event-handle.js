@@ -6,6 +6,24 @@
  */
 class EventHandle {
     /**
+     * @type {import('./events.js').Events}
+     * @private
+     */
+    owner;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    name;
+
+    /**
+     * @type {import('./events.js').HandleEvent}
+     * @private
+     */
+    fn;
+
+    /**
      * Creates an instance of EventHandle.
      *
      * @param {import('./events.js').Events} owner - Owner
@@ -58,4 +76,4 @@ class EventHandle {
     }
 }
 
-export default EventHandle;
+export { EventHandle };

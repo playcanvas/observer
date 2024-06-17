@@ -1,5 +1,5 @@
-import Events from './events.js';
-import Observer from './observer.js';
+import { Events } from './events.js';
+import { Observer } from './observer.js';
 
 /**
  * A list of observers.
@@ -300,4 +300,4 @@ class ObserverList extends Events {
     }
 }
 
-export default ObserverList;
+export { ObserverList };

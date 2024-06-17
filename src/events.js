@@ -1,4 +1,4 @@
-import EventHandle from './event-handle.js';
+import { EventHandle } from './event-handle.js';
 
 /**
  * @callback HandleEvent
@@ -269,4 +269,4 @@ class Events {
     }
 }
 
-export default Events;
+export { Events };

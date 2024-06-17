@@ -1,4 +1,4 @@
-import Events from './events.js';
+import { Events } from './events.js';
 import { arrayEquals } from './utils.js';
 
 /**
@@ -986,4 +986,4 @@ class Observer extends Events {
     }
 }
 
-export default Observer;
+export { Observer };
