@@ -8,12 +8,12 @@
  * @module Observer
  */
 
-import { EventHandle } from './event-handle.js';
-import { Events } from './events.js';
-import { History } from './history.js';
-import { ObserverHistory } from './observer-history.js';
-import { ObserverList } from './observer-list.js';
-import { Observer } from './observer.js';
+import { EventHandle } from './event-handle';
+import { Events } from './events';
+import { History } from './history';
+import { Observer } from './observer';
+import { ObserverHistory } from './observer-history';
+import { ObserverList } from './observer-list';
 
 export {
     EventHandle,

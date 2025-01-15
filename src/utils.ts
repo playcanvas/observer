@@ -3,9 +3,9 @@
  * same length and corresponding elements are equal. This function also supports nested arrays,
  * comparing them recursively.
  *
- * @param {Array} a - The first array to compare.
- * @param {Array} b - The second array to compare.
- * @returns {boolean} - Returns `true` if the arrays are deeply equal, otherwise `false`.
+ * @param a - The first array to compare.
+ * @param b - The second array to compare.
+ * @returns Returns `true` if the arrays are deeply equal, otherwise `false`.
  *
  * @example
  * arrayEquals([1, 2, 3], [1, 2, 3]); // true
@@ -15,7 +15,7 @@
  * arrayEquals([1, 2, 3], null); // false
  * arrayEquals(null, null); // false
  */
-const arrayEquals = (a, b) => {
+const arrayEquals = (a: any[], b: any[]) => {
     if (!a || !b) {
         return false;
     }

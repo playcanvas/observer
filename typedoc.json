@@ -1,8 +1,7 @@
 {
     "entryPoints": [
-        "./src/index.js"
+        "./src/index.ts"
     ],
-    "excludeNotDocumented": true,
     "name": "PlayCanvas Observer API Reference",
     "navigationLinks": {
         "Developer Site": "https://developer.playcanvas.com/",

@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "allowJs": true,
         "lib": [
             "es2019",
             "dom",
@@ -11,5 +10,5 @@
         "outDir": "types",
         "target": "es6"
     },
-    "include": ["./src/index.js", "rollup.config.mjs"],
+    "include": ["src", "rollup.config.mjs"],
 }

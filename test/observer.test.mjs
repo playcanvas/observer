@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { Observer } from '../src/observer.js';
+import { Observer } from '../src/observer';
 
 
 const getData = () => {

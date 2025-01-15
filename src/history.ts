@@ -1,14 +1,31 @@
-import { Events } from './events.js';
+import { Events } from './events';
 
 /**
- * @typedef {object} HistoryAction
- * @property {string} name - The action name.
- * @property {Function} undo - The undo function.
- * @property {Function} redo - The redo function.
- * @property {boolean} combine Whether to combine with the previous action with the same name. The
- * effect of combining is merely changing the redo function to be the redo function of this action.
- * The original undo function is not modified.
+ * Represents an action in the history.
  */
+export type HistoryAction = {
+    /**
+     * The action name.
+     */
+    name: string;
+
+    /**
+     * The undo function.
+     */
+    undo: () => void;
+
+    /**
+     * The redo function.
+     */
+    redo: () => void;
+
+    /**
+     * Whether to combine with the previous action with the same name.
+     * The effect of combining is merely changing the redo function to be the redo function of this action.
+     * The original undo function is not modified.
+     */
+    combine: boolean;
+};
 
 /**
  * Manages history actions for undo/redo operations. This class keeps track of actions that can be
@@ -35,23 +52,15 @@ import { Events } from './events.js';
  * history.redo();
  */
 class History extends Events {
-    /** @private */
-    _executing = 0;
+    private _executing: number = 0;
 
-    /**
-     * @type {HistoryAction[]}
-     * @private
-     */
-    _actions = [];
+    private _actions: HistoryAction[] = [];
 
-    /** @private */
-    _currentActionIndex = -1;
+    private _currentActionIndex: number = -1;
 
-    /** @private */
-    _canUndo = false;
+    private _canUndo: boolean = false;
 
-    /** @private */
-    _canRedo = false;
+    private _canRedo: boolean = false;
 
     /**
      * Adds a new history action to the stack. If the action has a combine flag and matches the
@@ -59,10 +68,10 @@ class History extends Events {
      * been undone before adding this new action, it removes all actions that come after the
      * current action to maintain a consistent history.
      *
-     * @param {HistoryAction} action - The action to add.
-     * @returns {boolean} - Returns `true` if the action is successfully added, `false` otherwise.
+     * @param action - The action to add.
+     * @returns Returns `true` if the action is successfully added, `false` otherwise.
      */
-    add(action) {
+    add(action: HistoryAction) {
         if (!action.name) {
             console.error('Trying to add history action without name');
             return false;
@@ -104,10 +113,10 @@ class History extends Events {
     /**
      * Adds a new history action and immediately executes its redo function.
      *
-     * @param {HistoryAction} action - The action.
-     * @returns {Promise<void>} A promise that resolves once the redo function has been executed.
+     * @param action - The action.
+     * @returns A promise that resolves once the redo function has been executed.
      */
-    async addAndExecute(action) {
+    async addAndExecute(action: HistoryAction) {
         if (this.add(action)) {
             // execute an action - don't allow history actions till it finishes
             try {
@@ -123,7 +132,7 @@ class History extends Events {
      * Undoes the last history action. This method retrieves the current action from the history
      * stack and executes the action's undo function.
      *
-     * @returns {Promise<void>} A promise that resolves once the undo function has been executed.
+     * @returns A promise that resolves once the undo function has been executed.
      */
     async undo() {
         if (!this.canUndo) {
@@ -158,7 +167,7 @@ class History extends Events {
      * Redoes the next history action. This retrieves the next action from the history stack and
      * executes the action's redo function.
      *
-     * @returns {Promise<void>} A promise that resolves once the redo function has been executed.
+     * @returns A promise that resolves once the redo function has been executed.
      */
     async redo() {
         if (!this.canRedo) {
@@ -202,8 +211,6 @@ class History extends Events {
 
     /**
      * The current history action.
-     *
-     * @type {HistoryAction}
      */
     get currentAction() {
         return this._actions[this._currentActionIndex] || null;
@@ -211,8 +218,6 @@ class History extends Events {
 
     /**
      * The last action committed to the history.
-     *
-     * @type {HistoryAction}
      */
     get lastAction() {
         return this._actions[this._actions.length - 1] || null;
@@ -220,8 +225,6 @@ class History extends Events {
 
     /**
      * Sets whether we can undo at this time.
-     *
-     * @type {boolean}
      */
     set canUndo(value) {
         if (this._canUndo === value) return;
@@ -233,8 +236,6 @@ class History extends Events {
 
     /**
      * Gets whether we can undo at this time.
-     *
-     * @type {boolean}
      */
     get canUndo() {
         return this._canUndo && !this.executing;
@@ -242,8 +243,6 @@ class History extends Events {
 
     /**
      * Sets whether we can redo at this time.
-     *
-     * @type {boolean}
      */
     set canRedo(value) {
         if (this._canRedo === value) return;
@@ -255,8 +254,6 @@ class History extends Events {
 
     /**
      * Gets whether we can redo at this time.
-     *
-     * @type {boolean}
      */
     get canRedo() {
         return this._canRedo && !this.executing;
@@ -264,8 +261,6 @@ class History extends Events {
 
     /**
      * Sets the number of async actions currently executing.
-     *
-     * @type {number}
      */
     set executing(value) {
         if (this._executing === value) return;
@@ -282,8 +277,6 @@ class History extends Events {
 
     /**
      * Gets the number of async actions currently executing.
-     *
-     * @type {number}
      */
     get executing() {
         return this._executing;
