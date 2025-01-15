@@ -577,7 +577,7 @@ class Observer extends Events {
             if (node._data) {
                 node = node._data[keys[i]];
             } else {
-                node = node.get(keys[i]) as Observer;
+                node = (node as any)[keys[i]];
             }
         }
 
@@ -601,7 +601,7 @@ class Observer extends Events {
             if (node._data) {
                 node = node._data[keys[i]];
             } else {
-                node = node.get(keys[i]) as Observer;
+                node = (node as any)[keys[i]];
             }
         }
 
