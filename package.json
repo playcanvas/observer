@@ -64,7 +64,7 @@
     "docs": "typedoc",
     "lint": "eslint src test rollup.config.mjs eslint.config.mjs",
     "lint:fix": "eslint src test rollup.config.mjs eslint.config.mjs --fix",
-    "publint": "publint --level error",
+    "publint": "publint",
     "test": "mocha"
   }
 }
