@@ -122,7 +122,7 @@ class Events {
      * // Emit the event again
      * events.emit('testEvent', 'value1', 'value2'); // The callback will not be called this time.
      */
-    once(name: string, fn: EventHandle) {
+    once(name: string, fn: HandleEvent) {
         const evt = this.on(name, (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) => {
             fn.call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
             evt.unbind();

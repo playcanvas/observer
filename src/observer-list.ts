@@ -11,15 +11,15 @@ class ObserverList extends Events {
 
     private _indexed: Record<number, Observer> = {};
 
-    sorted: () => any = null;
+    sorted: ((arg0: any, arg1: any) => number) | null = null;
 
-    index: any = null;
+    index: string | null = null;
 
     /**
      * @param options.sorted - Sorted
      * @param options.index - Index
      */
-    constructor(options: { sorted?: () => any, index?: number } = {}) {
+    constructor(options: { sorted?: (arg0: any, arg1: any) => number, index?: string } = {}) {
         super();
 
         this.sorted = options.sorted || null;

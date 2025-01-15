@@ -587,9 +587,9 @@ class Observer extends Events {
     /**
      * @param path - Path to the value.
      * @param raw - Retrieve the observer object without converting it to JSON.
-     * @returns {Observer | object} The value at the specified path.
+     * @returns The value at the specified path.
      */
-    get(path: string, raw: boolean = false) {
+    get(path: string, raw: boolean = false): any {
         const keys = Observer._splitPath(path);
         let node: Observer = this;
         for (let i = 0; i < keys.length; i++) {

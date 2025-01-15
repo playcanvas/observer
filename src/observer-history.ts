@@ -21,7 +21,7 @@ class ObserverHistory extends Events {
     /**
      * @param args - Arguments
      */
-    constructor(args: { item?: any, history?: boolean, enabled?: boolean, prefix?: string, combine?: boolean } = {}) {
+    constructor(args: { item?: any, history?: any, enabled?: boolean, prefix?: string, combine?: boolean } = {}) {
         super();
 
         this.item = args.item;
