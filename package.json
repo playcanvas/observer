@@ -68,5 +68,8 @@
     "type:check": "tsc --noEmit",
     "publint": "publint",
     "test": "mocha"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
