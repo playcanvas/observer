@@ -126,8 +126,9 @@ class History extends Events {
      * @returns {Promise<void>} A promise that resolves once the undo function has been executed.
      */
     async undo() {
-        if (!this.canUndo)
+        if (!this.canUndo) {
             return;
+        }
 
         const name = this.currentAction.name;
         const undo = this.currentAction.undo;
@@ -160,8 +161,9 @@ class History extends Events {
      * @returns {Promise<void>} A promise that resolves once the redo function has been executed.
      */
     async redo() {
-        if (!this.canRedo)
+        if (!this.canRedo) {
             return;
+        }
 
         this._currentActionIndex++;
         const redo = this.currentAction.redo;

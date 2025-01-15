@@ -27,8 +27,9 @@ class ObserverHistory extends Events {
             if (!this._enabled || !this._history) return;
 
             // need jsonify
-            if (value instanceof Observer)
+            if (value instanceof Observer) {
                 value = value.json();
+            }
 
             // action
             const action = {
