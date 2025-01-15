@@ -49,7 +49,7 @@ jobs:
         node-version: 18.x
     - name: Install dependencies
       run: npm ci
-    - name: Build PlayCanvas Observer
-      run: npm run build
+    - name: Build PlayCanvas Observer (ESM)
+      run: npm run build:esm
     - name: Run Mocha
       run: npm run test
