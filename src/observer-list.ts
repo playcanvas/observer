@@ -7,7 +7,7 @@ import { Observer } from './observer';
  * @ignore
  */
 class ObserverList extends Events {
-    data: any[];
+    data: any[] = [];
 
     private _indexed: Record<number, Observer> = {};
 
