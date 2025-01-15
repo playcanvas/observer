@@ -825,7 +825,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully inserted and false otherwise.
      */
-    insert(path: string, value: any, ind: number, silent: boolean = false, remote: boolean = false) {
+    insert(path: string, value: any, ind?: number, silent: boolean = false, remote: boolean = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -872,7 +872,7 @@ class Observer extends Events {
         return true;
     }
 
-    private _doInsert(node: Observer, key: string, value: any, ind: number, allowDuplicates: boolean = false) {
+    private _doInsert(node: Observer, key: string, value: any, ind?: number, allowDuplicates: boolean = false) {
         const arr = node._data[key];
 
         if (typeof value === 'object' && !(value instanceof Observer) && value !== null) {
