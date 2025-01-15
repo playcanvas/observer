@@ -100,8 +100,9 @@ class Events {
         if (events === undefined) {
             this._events[name] = [fn];
         } else {
-            if (events.indexOf(fn) === -1)
+            if (events.indexOf(fn) === -1) {
                 events.push(fn);
+            }
         }
         return new EventHandle(this, name, fn);
     }
@@ -170,8 +171,9 @@ class Events {
             events = events.slice(0);
 
             for (let i = 0; i < events.length; i++) {
-                if (!events[i])
+                if (!events[i]) {
                     continue;
+                }
 
                 try {
                     events[i].call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
@@ -222,8 +224,9 @@ class Events {
     unbind(name, fn) {
         if (name) {
             const events = this._events[name];
-            if (!events)
+            if (!events) {
                 return this;
+            }
 
             if (fn) {
                 const i = events.indexOf(fn);

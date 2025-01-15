@@ -32,7 +32,7 @@ const nonEsmOptions = {
                 loose: true,
                 modules: false,
                 targets: {
-                    ie: "11"
+                    ie: '11'
                 }
             }
         ]
@@ -77,9 +77,9 @@ const esm = {
 let targets = [cjs, esm, umd];
 if (process.env.target) {
     switch (process.env.target.toLowerCase()) {
-        case "cjs":      targets = [cjs]; break;
-        case "esm":      targets = [esm]; break;
-        case "umd":      targets = [umd]; break;
+        case 'cjs':      targets = [cjs]; break;
+        case 'esm':      targets = [esm]; break;
+        case 'umd':      targets = [umd]; break;
     }
 }
 

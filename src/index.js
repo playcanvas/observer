@@ -11,9 +11,9 @@
 import { EventHandle } from './event-handle.js';
 import { Events } from './events.js';
 import { History } from './history.js';
-import { Observer } from './observer.js';
 import { ObserverHistory } from './observer-history.js';
 import { ObserverList } from './observer-list.js';
+import { Observer } from './observer.js';
 
 export {
     EventHandle,

@@ -85,11 +85,13 @@ class ObserverList extends Events {
         let a, i;
         fn = fn || this.sorted;
 
-        if (l.length === 0)
+        if (l.length === 0) {
             return -1;
+        }
 
-        if (fn(l[0], b) === 0)
+        if (fn(l[0], b) === 0) {
             return 0;
+        }
 
         while (min <= max) {
             cur = Math.floor((min + max) / 2);
@@ -106,11 +108,13 @@ class ObserverList extends Events {
             }
         }
 
-        if (fn(a, b) === 1)
+        if (fn(a, b) === 1) {
             return cur;
+        }
 
-        if ((cur + 1) === l.length)
+        if ((cur + 1) === l.length) {
             return -1;
+        }
 
         return cur + 1;
     }
@@ -125,8 +129,9 @@ class ObserverList extends Events {
     }
 
     add(item) {
-        if (this.has(item))
+        if (this.has(item)) {
             return null;
+        }
 
         let index = this.data.length;
         if (this.index) {
@@ -172,8 +177,9 @@ class ObserverList extends Events {
     }
 
     remove(item) {
-        if (!this.has(item))
+        if (!this.has(item)) {
             return;
+        }
 
         const ind = this.data.indexOf(item);
 
@@ -194,8 +200,9 @@ class ObserverList extends Events {
         if (this.index) {
             item = this._indexed[index];
 
-            if (!item)
+            if (!item) {
                 return;
+            }
 
             const ind = this.data.indexOf(item);
             this.data.splice(ind, 1);
@@ -204,8 +211,9 @@ class ObserverList extends Events {
 
             this.emit('remove', item, ind);
         } else {
-            if (this.data.length < index)
+            if (this.data.length < index) {
                 return;
+            }
 
             item = this.data[index];
 
@@ -218,8 +226,9 @@ class ObserverList extends Events {
     removeBy(fn) {
         let i = this.data.length;
         while (i--) {
-            if (!fn(this.data[i]))
+            if (!fn(this.data[i])) {
                 continue;
+            }
 
             if (this.index) {
                 delete this._indexed[this.data[i][this.index]];
@@ -251,12 +260,14 @@ class ObserverList extends Events {
     find(fn) {
         const items = [];
         for (let i = 0; i < this.data.length; i++) {
-            if (!fn(this.data[i]))
+            if (!fn(this.data[i])) {
                 continue;
+            }
 
             let index = i;
-            if (this.index)
+            if (this.index) {
                 index = this.data[i][this.index];
+            }
 
             items.push([index, this.data[i]]);
         }
@@ -265,12 +276,14 @@ class ObserverList extends Events {
 
     findOne(fn) {
         for (let i = 0; i < this.data.length; i++) {
-            if (!fn(this.data[i]))
+            if (!fn(this.data[i])) {
                 continue;
+            }
 
             let index = i;
-            if (this.index)
+            if (this.index) {
                 index = this.data[i][this.index];
+            }
 
             return [index, this.data[i]];
         }

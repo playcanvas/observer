@@ -27,13 +27,6 @@
     "type": "git",
     "url": "git+https://github.com/playcanvas/observer.git"
   },
-  "eslintConfig": {
-    "extends": "@playcanvas/eslint-config",
-    "parser": "@babel/eslint-parser",
-    "parserOptions": {
-      "requireConfigFile": false
-    }
-  },
   "files": [
     "dist/index.cjs",
     "dist/index.js",
@@ -44,13 +37,14 @@
     "README.md"
   ],
   "devDependencies": {
-    "@babel/core": "^7.24.7",
-    "@babel/eslint-parser": "^7.24.7",
-    "@babel/preset-env": "^7.24.7",
-    "@playcanvas/eslint-config": "^1.7.1",
+    "@babel/core": "^7.23.7",
+    "@babel/eslint-parser": "^7.23.3",
+    "@babel/preset-env": "^7.23.8",
+    "@playcanvas/eslint-config": "2.0.8",
     "@rollup/plugin-babel": "^6.0.4",
     "chai": "^5.1.1",
     "eslint": "^8.56.0",
+    "globals": "^15.14.0",
     "mocha": "^10.4.0",
     "publint": "^0.2.8",
     "rollup": "^4.18.0",
@@ -63,12 +57,14 @@
     "build": "rollup -c",
     "build:esm": "rollup -c --environment target:esm",
     "build:umd": "rollup -c --environment target:umd",
-    "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly",
+    "build:types": "tsc -p tsconfig.build.json",
+    "watch": "rollup -c -w",
+    "watch:esm": "rollup -c --environment target:esm -w",
+    "watch:umd": "rollup -c --environment target:umd -w",
     "docs": "typedoc",
-    "lint": "eslint --ext .js src rollup.config.js",
+    "lint": "eslint src test rollup.config.mjs eslint.config.mjs",
+    "lint:fix": "eslint src test rollup.config.mjs eslint.config.mjs --fix",
     "publint": "publint --level error",
-    "publish:observer": "npm run build && npm run build:types && npm publish",
-    "test": "mocha",
-    "test:types": "tsc --pretty false types/index.d.ts"
+    "test": "mocha"
   }
 }

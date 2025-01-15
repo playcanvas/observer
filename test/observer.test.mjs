@@ -1,6 +1,7 @@
+import { expect } from 'chai';
+
 import { Observer } from '../src/observer.js';
 
-import { expect } from 'chai';
 
 const getData = () => {
     return {
@@ -14,7 +15,7 @@ const getData = () => {
     };
 };
 
-describe("Observer", () => {
+describe('Observer', () => {
 
     it('supports constructor with zero arguments', () => {
         const observer = new Observer();
