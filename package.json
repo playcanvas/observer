@@ -42,6 +42,8 @@
     "@babel/preset-env": "^7.23.8",
     "@playcanvas/eslint-config": "2.0.8",
     "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@typescript-eslint/parser": "^8.20.0",
     "chai": "^5.1.1",
     "eslint": "^8.56.0",
     "globals": "^15.14.0",
@@ -62,9 +64,13 @@
     "watch:esm": "rollup -c --environment target:esm -w",
     "watch:umd": "rollup -c --environment target:umd -w",
     "docs": "typedoc",
-    "lint": "eslint src test rollup.config.mjs eslint.config.mjs",
-    "lint:fix": "eslint src test rollup.config.mjs eslint.config.mjs --fix",
+    "lint": "eslint src rollup.config.mjs eslint.config.mjs",
+    "lint:fix": "eslint src rollup.config.mjs eslint.config.mjs --fix",
+    "type:check": "tsc --noEmit",
     "publint": "publint",
     "test": "mocha"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
