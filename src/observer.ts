@@ -2,6 +2,10 @@ import { Events } from './events';
 import { ObserverHistory } from './observer-history';
 import { arrayEquals } from './utils';
 
+/**
+ * The ObserverSync class is used to construct an interface for synchronizing changes from Observer
+ * to other services.
+ */
 export type ObserverSync = {
     enabled: boolean;
 }

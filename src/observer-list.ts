@@ -2,9 +2,7 @@ import { Events } from './events';
 import { Observer } from './observer';
 
 /**
- * A list of observers.
- *
- * @ignore
+ * The ObserverList class is a list of Observer objects.
  */
 class ObserverList extends Events {
     data: any[] = [];

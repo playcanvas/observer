@@ -3,7 +3,8 @@ import { Events } from './events';
 import { Observer } from './observer';
 
 /**
- * History for an observer.
+ * The ObserverHistory module provides a mechanism for tracking changes to an Observer object and
+ * storing them in a history stack.
  */
 class ObserverHistory extends Events {
     item: any;
