@@ -7,19 +7,9 @@
  *
  * @module Observer
  */
-
-import { EventHandle } from './event-handle';
-import { Events } from './events';
-import { History } from './history';
-import { Observer } from './observer';
-import { ObserverHistory } from './observer-history';
-import { ObserverList } from './observer-list';
-
-export {
-    EventHandle,
-    Events,
-    History,
-    Observer,
-    ObserverHistory,
-    ObserverList
-};
+export * from './event-handle';
+export * from './events';
+export * from './history';
+export * from './observer';
+export * from './observer-history';
+export * from './observer-list';
