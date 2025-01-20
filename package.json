@@ -1,6 +1,6 @@
 {
   "name": "@playcanvas/observer",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "author": "PlayCanvas <support@playcanvas.com>",
   "homepage": "https://github.com/playcanvas/observer#readme",
   "description": "Generic implementation of the observer pattern",
