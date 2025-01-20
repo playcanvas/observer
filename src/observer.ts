@@ -1,7 +1,10 @@
 import { Events } from './events';
 import { ObserverHistory } from './observer-history';
-import { ObserverSync } from './observer-sync';
 import { arrayEquals } from './utils';
+
+export type ObserverSync = {
+    enabled: boolean;
+}
 
 /**
  * The Observer class is used to observe and manage changes to an object. It allows for tracking

@@ -13,4 +13,3 @@ export * from './history';
 export * from './observer';
 export * from './observer-history';
 export * from './observer-list';
-export * from './observer-sync';
