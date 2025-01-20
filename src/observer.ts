@@ -6,7 +6,8 @@ import { arrayEquals } from './utils';
  * The ObserverSync class is used to construct an interface for synchronizing changes from Observer
  * to other services.
  */
-export type ObserverSync = {
+export type ObserverSync = Events & {
+    write: (...args: any[]) => void;
     enabled: boolean;
 }
 
