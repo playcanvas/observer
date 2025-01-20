@@ -1,5 +1,6 @@
 import { Events } from './events';
 import { ObserverHistory } from './observer-history';
+import { ObserverSync } from './observer-sync';
 import { arrayEquals } from './utils';
 
 /**
@@ -51,7 +52,7 @@ class Observer extends Events {
 
     history: ObserverHistory;
 
-    sync: any;
+    sync: ObserverSync;
 
     schema: any;
 
