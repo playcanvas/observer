@@ -54,4 +54,4 @@ To build the API reference manual, run:
 
     npm run docs
 
-A pre-built API reference manual is hosted [here](https://api.playcanvas.com/modules/Observer.html).
+A pre-built API reference manual is hosted [here](https://api.playcanvas.com/observer/).
