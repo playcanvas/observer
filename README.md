@@ -1,6 +1,14 @@
+# Observer - TypeScript Implementation of the Observer Pattern
+
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/playcanvas/observer/blob/main/LICENSE)
+[![NPM Version](https://img.shields.io/npm/v/@playcanvas/observer.svg?style=flat?style=flat)](https://www.npmjs.com/package/@playcanvas/observer)
+[![NPM Downloads](https://img.shields.io/npm/dw/@playcanvas/observer)](https://npmtrends.com/@playcanvas/observer)
+
+| [API Reference](https://api.playcanvas.com/observer/) | [Blog](https://blog.playcanvas.com/) | [Forum](https://forum.playcanvas.com/) | [Discord](https://discord.gg/RSaMRzg) |
+
 # Overview
 
-The PlayCanvas Observer is a powerful JavaScript library for managing and observing changes to objects. It allows tracking modifications to nested properties, emitting events on changes, and maintaining state consistency. This is particularly useful in applications where state management and change tracking are critical, such as in data-driven interfaces or collaborative applications.
+The PlayCanvas Observer is a powerful TypeScript library for managing and observing changes to objects. It allows tracking modifications to nested properties, emitting events on changes, and maintaining state consistency. This is particularly useful in applications where state management and change tracking are critical, such as in data-driven interfaces or collaborative applications.
 
 ## Installing
 
