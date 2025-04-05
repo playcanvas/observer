@@ -1,4 +1,4 @@
-# Observer - TypeScript Implementation of the Observer Pattern
+# Observer - Observer Pattern for JS/TS
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/playcanvas/observer/blob/main/LICENSE)
 [![NPM Version](https://img.shields.io/npm/v/@playcanvas/observer.svg?style=flat?style=flat)](https://www.npmjs.com/package/@playcanvas/observer)
