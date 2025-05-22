@@ -11,45 +11,64 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Setup Node.js 18.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
-    - name: Install dependencies
-      run: npm ci
-    - name: Build PlayCanvas Observer
-      run: npm run build
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build PlayCanvas Observer
+        run: npm run build
+
+      - name: Build PlayCanvas Observer Types
+        run: npm run build:types
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Setup Node.js 18.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
-    - name: Install dependencies
-      run: npm ci
-    - name: Run ESLint
-      run: npm run lint
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
 
   test:
     name: Test
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Setup Node.js 18.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
-    - name: Install dependencies
-      run: npm ci
-    - name: Build PlayCanvas Observer (ESM)
-      run: npm run build:esm
-    - name: Run Mocha
-      run: npm run test
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build PlayCanvas Observer (ESM only)
+        run: npm run build:esm
+
+      - name: Run Tests
+        run: npm test
