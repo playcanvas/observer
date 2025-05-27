@@ -25,6 +25,8 @@ jobs:
 
       - name: Build PlayCanvas Observer
         run: npm run build
+        env:
+          NODE_ENV: production
 
       - name: Build PlayCanvas Observer Types
         run: npm run build:types
