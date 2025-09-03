@@ -6,7 +6,7 @@ import globals from 'globals';
 export default [
     ...playcanvasConfig,
     {
-        files: ['**/*.mjs'],
+        files: ['**/*.ts'],
         languageOptions: {
             parser: tsParser,
             parserOptions: {
