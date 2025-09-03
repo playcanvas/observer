@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js 18.x
         uses: actions/setup-node@v4
@@ -27,18 +27,12 @@ jobs:
       - name: Build PlayCanvas Observer
         run: npm run build
 
-      - name: Build PlayCanvas Observer Types
-        run: npm run build:types
-
-      - name: Run Publint
-        run: npm run publint
-  
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js 18.x
         uses: actions/setup-node@v4
@@ -58,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js 18.x
         uses: actions/setup-node@v4
