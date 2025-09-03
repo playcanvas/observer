@@ -71,18 +71,18 @@ npm run docs
 
 A pre-built API reference manual is hosted [here](https://api.playcanvas.com/observer/).
 
-[npm-version-badge]: https://img.shields.io/npm/v/@playcanvas/template
-[npm-downloads-badge]: https://img.shields.io/npm/dw/@playcanvas/template
-[license-badge]: https://img.shields.io/npm/l/@playcanvas/template
-[build-status-badge]: https://github.com/playcanvas/template/actions/workflows/ci.yml/badge.svg
-[issue-resolve-badge]: https://isitmaintained.com/badge/resolution/playcanvas/template.svg
-[open-issues-badge]: https://isitmaintained.com/badge/open/playcanvas/template.svg
+[npm-version-badge]: https://img.shields.io/npm/v/@playcanvas/observer
+[npm-downloads-badge]: https://img.shields.io/npm/dw/@playcanvas/observer
+[license-badge]: https://img.shields.io/npm/l/@playcanvas/observer
+[build-status-badge]: https://github.com/playcanvas/observer/actions/workflows/ci.yml/badge.svg
+[issue-resolve-badge]: https://isitmaintained.com/badge/resolution/playcanvas/observer.svg
+[open-issues-badge]: https://isitmaintained.com/badge/open/playcanvas/observer.svg
 
-[npm-url]: https://www.npmjs.com/package/@playcanvas/template
-[npm-trends-url]: https://npmtrends.com/@playcanvas/template
-[license-url]: https://github.com/playcanvas/template/blob/main/LICENSE
-[workflow-url]: https://github.com/playcanvas/template/actions/workflows/ci.yml
-[isitmaintained-url]: https://isitmaintained.com/project/playcanvas/template
+[npm-url]: https://www.npmjs.com/package/@playcanvas/observer
+[npm-trends-url]: https://npmtrends.com/@playcanvas/observer
+[license-url]: https://github.com/playcanvas/observer/blob/main/LICENSE
+[workflow-url]: https://github.com/playcanvas/observer/actions/workflows/ci.yml
+[isitmaintained-url]: https://isitmaintained.com/project/playcanvas/observer
 
 [manual-url]: https://developer.playcanvas.com
 [api-url]: https://api.playcanvas.com/observer
