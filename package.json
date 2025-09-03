@@ -43,7 +43,8 @@
     "@playcanvas/eslint-config": "^2.0.9",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-typescript": "^12.1.2",
-    "@typescript-eslint/parser": "^8.29.0",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
     "chai": "^5.2.0",
     "eslint": "^9.24.0",
     "globals": "^16.0.0",
@@ -56,19 +57,19 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && npm run build:types",
     "build:esm": "rollup -c --environment target:esm",
     "build:umd": "rollup -c --environment target:umd",
     "build:types": "tsc -p tsconfig.build.json",
-    "watch": "rollup -c -w",
-    "watch:esm": "rollup -c --environment target:esm -w",
-    "watch:umd": "rollup -c --environment target:umd -w",
     "docs": "typedoc",
     "lint": "eslint src rollup.config.mjs eslint.config.mjs",
     "lint:fix": "eslint src rollup.config.mjs eslint.config.mjs --fix",
-    "type:check": "tsc --noEmit",
     "publint": "publint",
-    "test": "mocha"
+    "test": "mocha",
+    "type:check": "tsc --noEmit",
+    "watch": "rollup -c -w",
+    "watch:esm": "rollup -c --environment target:esm -w",
+    "watch:umd": "rollup -c --environment target:umd -w"
   },
   "engines": {
     "node": ">=18.0.0"
