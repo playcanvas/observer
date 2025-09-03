@@ -1,12 +1,13 @@
 # Observer - Observer Pattern for JS/TS
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/playcanvas/observer/blob/main/LICENSE)
-[![NPM Version](https://img.shields.io/npm/v/@playcanvas/observer.svg?style=flat?style=flat)](https://www.npmjs.com/package/@playcanvas/observer)
+[![NPM Version](https://img.shields.io/npm/v/@playcanvas/observer)](https://www.npmjs.com/package/@playcanvas/observer)
 [![NPM Downloads](https://img.shields.io/npm/dw/@playcanvas/observer)](https://npmtrends.com/@playcanvas/observer)
+[![License](https://img.shields.io/npm/l/@playcanvas/observer)](https://github.com/playcanvas/observer/blob/main/LICENSE)
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white&color=black)](https://discord.gg/RSaMRzg)
+[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=flat&logo=reddit&logoColor=white&color=black)](https://www.reddit.com/r/PlayCanvas)
+[![X](https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white&color=black)](https://x.com/intent/follow?screen_name=playcanvas)
 
-| [API Reference](https://api.playcanvas.com/observer/) | [Blog](https://blog.playcanvas.com/) | [Forum](https://forum.playcanvas.com/) | [Discord](https://discord.gg/RSaMRzg) |
-
-# Overview
+| [User Manual](https://developer.playcanvas.com) | [API Reference](https://api.playcanvas.com/observer) | [Blog](https://blog.playcanvas.com) | [Forum](https://forum.playcanvas.com) |
 
 The PlayCanvas Observer is a powerful TypeScript library for managing and observing changes to objects. It allows tracking modifications to nested properties, emitting events on changes, and maintaining state consistency. This is particularly useful in applications where state management and change tracking are critical, such as in data-driven interfaces or collaborative applications.
 
@@ -14,7 +15,9 @@ The PlayCanvas Observer is a powerful TypeScript library for managing and observ
 
 To install the NPM package, do:
 
-    npm install @playcanvas/observer --save-dev
+```
+npm install @playcanvas/observer --save-dev
+```
 
 ## Usage
 
@@ -51,8 +54,10 @@ observer.set('address.city', 'San Francisco'); // Logs: City changed from New Yo
 
 To generate a UMD and ESM build of the Observer library, run:
 
-    npm install
-    npm run build
+```
+npm install
+npm run build
+```
 
 The UMD build is `dist/index.js`. The ESM build is `dist/index.mjs`.
 
@@ -60,6 +65,8 @@ The UMD build is `dist/index.js`. The ESM build is `dist/index.mjs`.
 
 To build the API reference manual, run:
 
-    npm run docs
+```
+npm run docs
+```
 
 A pre-built API reference manual is hosted [here](https://api.playcanvas.com/observer/).
