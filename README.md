@@ -15,7 +15,9 @@ The PlayCanvas Observer is a powerful TypeScript library for managing and observ
 
 To install the NPM package, do:
 
-    npm install @playcanvas/observer --save-dev
+```
+npm install @playcanvas/observer --save-dev
+```
 
 ## Usage
 
@@ -52,8 +54,10 @@ observer.set('address.city', 'San Francisco'); // Logs: City changed from New Yo
 
 To generate a UMD and ESM build of the Observer library, run:
 
-    npm install
-    npm run build
+```
+npm install
+npm run build
+```
 
 The UMD build is `dist/index.js`. The ESM build is `dist/index.mjs`.
 
@@ -61,7 +65,9 @@ The UMD build is `dist/index.js`. The ESM build is `dist/index.mjs`.
 
 To build the API reference manual, run:
 
-    npm run docs
+```
+npm run docs
+```
 
 A pre-built API reference manual is hosted [here](https://api.playcanvas.com/observer/).
 
