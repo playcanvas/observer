@@ -31,6 +31,9 @@ jobs:
       - name: Build PlayCanvas Observer Types
         run: npm run build:types
 
+      - name: Run Publint
+        run: npm run publint
+
       - name: Publish to npm
         run: npm publish
         env:
