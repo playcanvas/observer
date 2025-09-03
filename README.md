@@ -1,12 +1,13 @@
 # Observer - Observer Pattern for JS/TS
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/playcanvas/observer/blob/main/LICENSE)
-[![NPM Version](https://img.shields.io/npm/v/@playcanvas/observer.svg?style=flat?style=flat)](https://www.npmjs.com/package/@playcanvas/observer)
-[![NPM Downloads](https://img.shields.io/npm/dw/@playcanvas/observer)](https://npmtrends.com/@playcanvas/observer)
+[![NPM Version][npm-version-badge]][npm-url]
+[![NPM Downloads][npm-downloads-badge]][npm-trends-url]
+[![License][license-badge]][license-url]
+[![GitHub Actions Build Status][build-status-badge]][workflow-url]
+[![Github Issue Resolve Time][issue-resolve-badge]][isitmaintained-url]
+[![Github Open Issues][open-issues-badge]][isitmaintained-url]
 
-| [API Reference](https://api.playcanvas.com/observer/) | [Blog](https://blog.playcanvas.com/) | [Forum](https://forum.playcanvas.com/) | [Discord](https://discord.gg/RSaMRzg) |
-
-# Overview
+| [User Manual][manual-url] | [API Reference][api-url] | [Blog][blog-url] | [Forum][forum-url] | [Discord][discord-url] | [Reddit][reddit-url] | [Twitter][twitter-url] |
 
 The PlayCanvas Observer is a powerful TypeScript library for managing and observing changes to objects. It allows tracking modifications to nested properties, emitting events on changes, and maintaining state consistency. This is particularly useful in applications where state management and change tracking are critical, such as in data-driven interfaces or collaborative applications.
 
@@ -63,3 +64,24 @@ To build the API reference manual, run:
     npm run docs
 
 A pre-built API reference manual is hosted [here](https://api.playcanvas.com/observer/).
+
+[npm-version-badge]: https://img.shields.io/npm/v/@playcanvas/template
+[npm-downloads-badge]: https://img.shields.io/npm/dw/@playcanvas/template
+[license-badge]: https://img.shields.io/npm/l/@playcanvas/template
+[build-status-badge]: https://github.com/playcanvas/template/actions/workflows/ci.yml/badge.svg
+[issue-resolve-badge]: https://isitmaintained.com/badge/resolution/playcanvas/template.svg
+[open-issues-badge]: https://isitmaintained.com/badge/open/playcanvas/template.svg
+
+[npm-url]: https://www.npmjs.com/package/@playcanvas/template
+[npm-trends-url]: https://npmtrends.com/@playcanvas/template
+[license-url]: https://github.com/playcanvas/template/blob/main/LICENSE
+[workflow-url]: https://github.com/playcanvas/template/actions/workflows/ci.yml
+[isitmaintained-url]: https://isitmaintained.com/project/playcanvas/template
+
+[manual-url]: https://developer.playcanvas.com
+[api-url]: https://api.playcanvas.com/observer
+[blog-url]: https://blog.playcanvas.com
+[forum-url]: https://forum.playcanvas.com
+[discord-url]: https://discord.gg/RSaMRzg
+[reddit-url]: https://www.reddit.com/r/PlayCanvas/
+[twitter-url]: https://twitter.com/intent/follow?screen_name=playcanvas
