@@ -45,7 +45,7 @@
     "@rollup/plugin-typescript": "12.3.0",
     "@typescript-eslint/eslint-plugin": "8.49.0",
     "@typescript-eslint/parser": "8.49.0",
-    "chai": "5.3.3",
+    "chai": "6.2.1",
     "eslint": "9.39.2",
     "globals": "16.5.0",
     "mocha": "11.7.5",
