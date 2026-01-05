@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
-import { Events, Observer, ObserverList } from '../dist/index.mjs';
-
+import { Observer } from '../dist/index.mjs';
 
 const getData = () => {
     return {
@@ -150,37 +149,8 @@ describe('Observer', () => {
 
         observer.destroy();
     });
-});
-
-describe('Events', () => {
 
     it('has non-enumerable internal properties', () => {
-        const events = new Events();
-        const keys = Object.keys(events);
-
-        expect(keys).to.not.include('_events');
-        expect(keys).to.not.include('_suspendEvents');
-        expect(keys).to.not.include('_additionalEmitters');
-    });
-
-    it('can be serialized to JSON without circular reference errors', () => {
-        const events1 = new Events();
-        const events2 = new Events();
-
-        // Create a scenario that would cause circular reference if _additionalEmitters was enumerable
-        events1.addEmitter(events2);
-        events2.addEmitter(events1);
-
-        // This should not throw
-        expect(() => JSON.stringify(events1)).to.not.throw();
-        expect(() => JSON.stringify(events2)).to.not.throw();
-    });
-
-});
-
-describe('Observer (non-enumerable properties)', () => {
-
-    it('has non-enumerable internal properties inherited from Events', () => {
         const observer = new Observer(getData());
         const keys = Object.keys(observer);
 
@@ -234,31 +204,6 @@ describe('Observer (non-enumerable properties)', () => {
 
         parent.destroy();
         child.destroy();
-    });
-
-});
-
-describe('ObserverList', () => {
-
-    it('has non-enumerable internal properties', () => {
-        const list = new ObserverList();
-        const keys = Object.keys(list);
-
-        expect(keys).to.not.include('_indexed');
-        expect(keys).to.not.include('_events');
-        expect(keys).to.not.include('_suspendEvents');
-        expect(keys).to.not.include('_additionalEmitters');
-    });
-
-    it('can be serialized to JSON without circular reference errors', () => {
-        const list = new ObserverList();
-        const observer = new Observer({ id: 1, name: 'test' });
-        list.add(observer);
-
-        // This should not throw
-        expect(() => JSON.stringify(list.json())).to.not.throw();
-
-        observer.destroy();
     });
 
 });

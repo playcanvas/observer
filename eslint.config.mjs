@@ -52,6 +52,11 @@ export default [
     },
     {
         files: ['**/*.test.js', '**/*.test.mjs'],
+        languageOptions: {
+            globals: {
+                ...globals.mocha
+            }
+        },
         rules: {
             'no-unused-expressions': 'off'
         }
