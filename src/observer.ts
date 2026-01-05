@@ -46,7 +46,7 @@ class Observer extends Events {
 
     private _pathsWithDuplicates!: Set<string> | null;
 
-    private _parent!: Observer;
+    private _parent!: Observer | null;
 
     private _parentPath!: string;
 
@@ -54,7 +54,7 @@ class Observer extends Events {
 
     private _parentKey!: any;
 
-    private _latestFn!: Function;
+    private _latestFn!: Function | null;
 
     private _silent!: boolean;
 
