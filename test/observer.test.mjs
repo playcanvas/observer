@@ -194,16 +194,22 @@ describe('Observer', () => {
             entries: []
         });
 
-        // Simulate what happens when array items become nested Observers
-        const child = new Observer({ name: 'child' }, { parent: parent, parentPath: 'entries', parentField: [] });
+        // Insert an object which becomes a nested Observer with _parent pointing back to parent
+        // This creates a true circular reference:
+        // - parent._data.entries[0] -> child Observer
+        // - child._parent -> parent
+        parent.insert('entries', { name: 'child' });
 
-        // The child has a reference back to parent - this would cause circular reference
+        // The nested Observer has a reference back to parent - this would cause circular reference
         // if _parent was enumerable
         expect(() => JSON.stringify(parent.json())).to.not.throw();
-        expect(() => JSON.stringify(child.json())).to.not.throw();
+
+        // Verify the structure is correct
+        const json = parent.json();
+        expect(json.entries).to.have.lengthOf(1);
+        expect(json.entries[0].name).to.equal('child');
 
         parent.destroy();
-        child.destroy();
     });
 
     it('prevents duplicate array insertions by default', () => {
