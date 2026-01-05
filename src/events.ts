@@ -35,11 +35,11 @@ export type HandleEvent = (arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?
  * events.unbind('testEvent');
  */
 class Events {
-    private _additionalEmitters: Events[];
+    private _additionalEmitters!: Events[];
 
-    private _events: Record<string, HandleEvent[]>;
+    private _events!: Record<string, HandleEvent[]>;
 
-    private _suspendEvents: boolean;
+    private _suspendEvents!: boolean;
 
     /**
      * Creates a new Events instance.

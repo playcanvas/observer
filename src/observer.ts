@@ -36,27 +36,27 @@ export type ObserverSync = Events & {
  * observer.set('name', 'Jane'); // Logs: Name changed from John to Jane
  */
 class Observer extends Events {
-    private _destroyed: boolean;
+    private _destroyed!: boolean;
 
-    private _path: string;
+    private _path!: string;
 
-    private _keys: string[];
+    private _keys!: string[];
 
-    private _data: any;
+    private _data!: any;
 
-    private _pathsWithDuplicates: Set<string> | null;
+    private _pathsWithDuplicates!: Set<string> | null;
 
-    private _parent: Observer;
+    private _parent!: Observer;
 
-    private _parentPath: string;
+    private _parentPath!: string;
 
-    private _parentField: any;
+    private _parentField!: any;
 
-    private _parentKey: any;
+    private _parentKey!: any;
 
-    private _latestFn: Function;
+    private _latestFn!: Function;
 
-    private _silent: boolean;
+    private _silent!: boolean;
 
     history: ObserverHistory;
 

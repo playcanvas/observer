@@ -7,7 +7,7 @@ import { Observer } from './observer';
 class ObserverList extends Events {
     data: any[] = [];
 
-    private _indexed: Record<number, Observer>;
+    private _indexed!: Record<number, Observer>;
 
     sorted: ((arg0: any, arg1: any) => number) | null = null;
 
