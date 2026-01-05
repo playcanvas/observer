@@ -206,4 +206,30 @@ describe('Observer', () => {
         child.destroy();
     });
 
+    it('prevents duplicate array insertions by default', () => {
+        const observer = new Observer({ items: [] });
+
+        observer.insert('items', 'a');
+        observer.insert('items', 'b');
+        observer.insert('items', 'a'); // duplicate - should be ignored
+
+        expect(observer.get('items')).to.deep.equal(['a', 'b']);
+
+        observer.destroy();
+    });
+
+    it('allows duplicate array insertions when path is in pathsWithDuplicates', () => {
+        const observer = new Observer({ items: [] }, {
+            pathsWithDuplicates: ['items']
+        });
+
+        observer.insert('items', 'a');
+        observer.insert('items', 'b');
+        observer.insert('items', 'a'); // duplicate - should be allowed
+
+        expect(observer.get('items')).to.deep.equal(['a', 'b', 'a']);
+
+        observer.destroy();
+    });
+
 });
