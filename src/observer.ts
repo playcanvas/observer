@@ -36,27 +36,27 @@ export type ObserverSync = Events & {
  * observer.set('name', 'Jane'); // Logs: Name changed from John to Jane
  */
 class Observer extends Events {
-    private _destroyed: boolean = false;
+    private _destroyed: boolean;
 
-    private _path: string = '';
+    private _path: string;
 
-    private _keys: string[] = [];
+    private _keys: string[];
 
-    private _data: any = { };
+    private _data: any;
 
-    private _pathsWithDuplicates: any = null;
+    private _pathsWithDuplicates: Set<string> | null;
 
-    private _parent: Observer = null;
+    private _parent: Observer;
 
-    private _parentPath: string = '';
+    private _parentPath: string;
 
-    private _parentField: any = null;
+    private _parentField: any;
 
-    private _parentKey: any = null;
+    private _parentKey: any;
 
-    private _latestFn: Function = null;
+    private _latestFn: Function;
 
-    private _silent: boolean = false;
+    private _silent: boolean;
 
     history: ObserverHistory;
 
@@ -80,27 +80,26 @@ class Observer extends Events {
     } = {}) {
         super();
 
-        // array paths where duplicate entries are allowed - normally
-        // we check if an array already has a value before inserting it
-        // but if the array path is in here we'll allow it
-        this._pathsWithDuplicates = null;
-        if (options.pathsWithDuplicates) {
-            this._pathsWithDuplicates = {};
-            for (let i = 0; i < options.pathsWithDuplicates.length; i++) {
-                this._pathsWithDuplicates[options.pathsWithDuplicates[i]] = true;
-            }
+        // Make internal properties non-enumerable so they don't get serialized
+        // when the object is converted to JSON (e.g., for ShareDB sync)
+        const props: [string, any][] = [
+            ['_destroyed', false],
+            ['_path', ''],
+            ['_keys', []],
+            ['_data', {}],
+            ['_pathsWithDuplicates', options.pathsWithDuplicates ? new Set(options.pathsWithDuplicates) : null],
+            ['_parent', options.parent || null],
+            ['_parentPath', options.parentPath || ''],
+            ['_parentField', options.parentField || null],
+            ['_parentKey', options.parentKey || null],
+            ['_latestFn', options.latestFn || null],
+            ['_silent', false]
+        ];
+        for (const [name, value] of props) {
+            Object.defineProperty(this, name, { enumerable: false, writable: true, value });
         }
 
         this.patch(data);
-
-        this._parent = options.parent || null;
-        this._parentPath = options.parentPath || '';
-        this._parentField = options.parentField || null;
-        this._parentKey = options.parentKey || null;
-
-        this._latestFn = options.latestFn || null;
-
-        this._silent = false;
 
         const propagate = function (evt: string) {
             return function (path: string, arg1: any, arg2: any, arg3: any) {
@@ -893,7 +892,7 @@ class Observer extends Events {
         }
 
         const path = node._path ? `${node._path}.${key}` : key;
-        if (value !== null && !allowDuplicates && (!this._pathsWithDuplicates || !this._pathsWithDuplicates[path])) {
+        if (value !== null && !allowDuplicates && !this._pathsWithDuplicates?.has(path)) {
             if (arr.indexOf(value) !== -1) {
                 return;
             }

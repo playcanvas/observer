@@ -35,26 +35,26 @@ export type HandleEvent = (arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?
  * events.unbind('testEvent');
  */
 class Events {
-    private _suspendEvents: boolean = false;
+    private _additionalEmitters: Events[];
 
-    private _additionalEmitters: Events[] = [];
+    private _events: Record<string, HandleEvent[]>;
 
-    private _events: Record<string, HandleEvent[]> = {};
+    private _suspendEvents: boolean;
 
     /**
      * Creates a new Events instance.
      */
     constructor() {
-        // _world
-        Object.defineProperty(
-            this,
-            '_events', {
-                enumerable: false,
-                configurable: false,
-                writable: true,
-                value: { }
-            }
-        );
+        // Make internal properties non-enumerable so they don't get serialized
+        // when the object is converted to JSON (e.g., for ShareDB sync)
+        const props: [string, any][] = [
+            ['_additionalEmitters', []],
+            ['_events', {}],
+            ['_suspendEvents', false]
+        ];
+        for (const [name, value] of props) {
+            Object.defineProperty(this, name, { enumerable: false, writable: true, value });
+        }
     }
 
     /**
