@@ -47,7 +47,7 @@
     "@typescript-eslint/parser": "8.49.0",
     "chai": "6.2.1",
     "eslint": "9.39.2",
-    "globals": "16.5.0",
+    "globals": "17.0.0",
     "mocha": "11.7.5",
     "publint": "0.3.16",
     "rollup": "4.53.3",
