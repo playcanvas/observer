@@ -2,7 +2,6 @@ import { expect } from 'chai';
 
 import { Observer } from '../dist/index.mjs';
 
-
 const getData = () => {
     return {
         name: 'Will',
@@ -150,4 +149,93 @@ describe('Observer', () => {
 
         observer.destroy();
     });
+
+    it('has non-enumerable internal properties', () => {
+        const observer = new Observer(getData());
+        const keys = Object.keys(observer);
+
+        // Events properties
+        expect(keys).to.not.include('_events');
+        expect(keys).to.not.include('_suspendEvents');
+        expect(keys).to.not.include('_additionalEmitters');
+
+        // Observer's own properties
+        expect(keys).to.not.include('_destroyed');
+        expect(keys).to.not.include('_path');
+        expect(keys).to.not.include('_keys');
+        expect(keys).to.not.include('_data');
+        expect(keys).to.not.include('_parent');
+        expect(keys).to.not.include('_parentPath');
+        expect(keys).to.not.include('_parentField');
+        expect(keys).to.not.include('_parentKey');
+        expect(keys).to.not.include('_latestFn');
+        expect(keys).to.not.include('_silent');
+        expect(keys).to.not.include('_pathsWithDuplicates');
+
+        observer.destroy();
+    });
+
+    it('can be serialized to JSON without including internal properties', () => {
+        const observer = new Observer(getData());
+        const jsonString = JSON.stringify(observer.json());
+
+        expect(jsonString).to.not.include('_events');
+        expect(jsonString).to.not.include('_suspendEvents');
+        expect(jsonString).to.not.include('_additionalEmitters');
+        expect(jsonString).to.not.include('_parent');
+        expect(jsonString).to.not.include('_data');
+
+        observer.destroy();
+    });
+
+    it('can be serialized when nested Observers have parent references', () => {
+        // This tests the exact scenario from the bug: nested Observers with _parent references
+        const parent = new Observer({
+            entries: []
+        });
+
+        // Insert an object which becomes a nested Observer with _parent pointing back to parent
+        // This creates a true circular reference:
+        // - parent._data.entries[0] -> child Observer
+        // - child._parent -> parent
+        parent.insert('entries', { name: 'child' });
+
+        // The nested Observer has a reference back to parent - this would cause circular reference
+        // if _parent was enumerable
+        expect(() => JSON.stringify(parent.json())).to.not.throw();
+
+        // Verify the structure is correct
+        const json = parent.json();
+        expect(json.entries).to.have.lengthOf(1);
+        expect(json.entries[0].name).to.equal('child');
+
+        parent.destroy();
+    });
+
+    it('prevents duplicate array insertions by default', () => {
+        const observer = new Observer({ items: [] });
+
+        observer.insert('items', 'a');
+        observer.insert('items', 'b');
+        observer.insert('items', 'a'); // duplicate - should be ignored
+
+        expect(observer.get('items')).to.deep.equal(['a', 'b']);
+
+        observer.destroy();
+    });
+
+    it('allows duplicate array insertions when path is in pathsWithDuplicates', () => {
+        const observer = new Observer({ items: [] }, {
+            pathsWithDuplicates: ['items']
+        });
+
+        observer.insert('items', 'a');
+        observer.insert('items', 'b');
+        observer.insert('items', 'a'); // duplicate - should be allowed
+
+        expect(observer.get('items')).to.deep.equal(['a', 'b', 'a']);
+
+        observer.destroy();
+    });
+
 });

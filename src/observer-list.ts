@@ -7,7 +7,7 @@ import { Observer } from './observer';
 class ObserverList extends Events {
     data: any[] = [];
 
-    private _indexed: Record<number, Observer> = {};
+    private _indexed!: Record<number, Observer>;
 
     sorted: ((arg0: any, arg1: any) => number) | null = null;
 
@@ -19,6 +19,9 @@ class ObserverList extends Events {
      */
     constructor(options: { sorted?: (arg0: any, arg1: any) => number, index?: string } = {}) {
         super();
+
+        // Make internal property non-enumerable so it doesn't get serialized
+        Object.defineProperty(this, '_indexed', { enumerable: false, writable: true, value: {} });
 
         this.sorted = options.sorted || null;
         this.index = options.index || null;
