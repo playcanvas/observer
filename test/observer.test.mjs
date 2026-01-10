@@ -238,4 +238,83 @@ describe('Observer', () => {
         observer.destroy();
     });
 
+    describe('nested array isolation', () => {
+        it('isolates nested arrays from source data modifications', () => {
+            // Simulates the ShareDB scenario: source data is modified externally
+            const sourceData = {
+                vectors: [[1, 2, 3], [4, 5, 6]]
+            };
+
+            const observer = new Observer(sourceData);
+
+            // Verify initial values
+            expect(observer.get('vectors.0')).to.deep.equal([1, 2, 3]);
+            expect(observer.get('vectors.0.0')).to.equal(1);
+
+            // Simulate external modification (like ShareDB updating its document)
+            sourceData.vectors[0][0] = 999;
+
+            // Observer's data should NOT be affected - it should have its own copy
+            expect(observer.get('vectors.0.0')).to.equal(1);
+            expect(observer.get('vectors.0')).to.deep.equal([1, 2, 3]);
+
+            observer.destroy();
+        });
+
+        it('fires set event when updating nested array element after source modification', () => {
+            // This is the exact bug scenario from GitHub issue #684
+            const sourceData = {
+                arrayVec3: [[1, 0, 0], [0, 1, 0]]
+            };
+
+            const observer = new Observer(sourceData);
+
+            // Simulate external modification (ShareDB updates its document)
+            sourceData.arrayVec3[0][0] = -1.94;
+
+            // Track if set event fires
+            let setEventFired = false;
+            let eventPath = null;
+            let eventValue = null;
+
+            observer.on('*:set', (path, value) => {
+                setEventFired = true;
+                eventPath = path;
+                eventValue = value;
+            });
+
+            // Now set the value through the observer (like sync.write does)
+            observer.set('arrayVec3.0.0', -1.94);
+
+            // The set event SHOULD fire because the observer's internal data
+            // should still be 1, not -1.94
+            expect(setEventFired).to.be.true;
+            expect(eventPath).to.equal('arrayVec3.0.0');
+            expect(eventValue).to.equal(-1.94);
+
+            observer.destroy();
+        });
+
+        it('maintains independent copies of deeply nested arrays', () => {
+            const sourceData = {
+                matrix: [
+                    [[1, 2], [3, 4]],
+                    [[5, 6], [7, 8]]
+                ]
+            };
+
+            const observer = new Observer(sourceData);
+
+            // Modify source at various levels
+            sourceData.matrix[0][0][0] = 100;
+            sourceData.matrix[1][1] = [99, 99];
+
+            // Observer should have independent data
+            expect(observer.get('matrix.0.0.0')).to.equal(1);
+            expect(observer.get('matrix.1.1')).to.deep.equal([7, 8]);
+
+            observer.destroy();
+        });
+    });
+
 });
