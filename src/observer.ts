@@ -1,6 +1,6 @@
 import { Events } from './events';
 import { ObserverHistory } from './observer-history';
-import { arrayEquals } from './utils';
+import { arrayEquals, deepCopyArray } from './utils';
 
 /**
  * The ObserverSync class is used to construct an interface for synchronizing changes from Observer
@@ -202,7 +202,7 @@ class Observer extends Events {
             for (i = 0; i < target._data[key].length; i++) {
                 if (typeof target._data[key][i] === 'object' && target._data[key][i] !== null) {
                     if (target._data[key][i] instanceof Array) {
-                        target._data[key][i].slice(0);
+                        target._data[key][i] = deepCopyArray(target._data[key][i]);
                     } else {
                         target._data[key][i] = new Observer(target._data[key][i], {
                             parent: this,
