@@ -52,15 +52,15 @@ export type HistoryAction = {
  * history.redo();
  */
 class History extends Events {
-    private _executing: number = 0;
+    private _executing = 0;
 
     private _actions: HistoryAction[] = [];
 
-    private _currentActionIndex: number = -1;
+    private _currentActionIndex = -1;
 
-    private _canUndo: boolean = false;
+    private _canUndo = false;
 
-    private _canRedo: boolean = false;
+    private _canRedo = false;
 
     /**
      * Adds a new history action to the stack. If the action has a combine flag and matches the

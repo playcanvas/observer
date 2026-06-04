@@ -1,5 +1,5 @@
 import { Events } from './events';
-import { ObserverHistory } from './observer-history';
+import type { ObserverHistory } from './observer-history';
 import { arrayEquals, deepCopyArray } from './utils';
 
 /**
@@ -188,7 +188,7 @@ class Observer extends Events {
         }
     }
 
-    private _prepare(target: Observer, key: string, value: any, silent: boolean = false, remote: boolean = false) {
+    private _prepare(target: Observer, key: string, value: any, silent = false, remote = false) {
         let i;
         let state;
         const path = (target._path ? (`${target._path}.`) : '') + key;
@@ -292,7 +292,7 @@ class Observer extends Events {
      * @param force - If true, the value will be set even if it is the same as the current value.
      * @returns Returns true if the value was successfully set and false otherwise.
      */
-    set(path: string, value: any, silent: boolean = false, remote: boolean = false, force: boolean = false) {
+    set(path: string, value: any, silent = false, remote = false, force = false) {
         let i;
         let valueOld: any;
         let keys = Observer._splitPath(path);
@@ -578,7 +578,7 @@ class Observer extends Events {
         const keys = Observer._splitPath(path);
         let node: Observer = this;
         for (let i = 0, len = keys.length; i < len; i++) {
-            // eslint-disable-next-line eqeqeq
+             
             if (node == undefined) {
                 return undefined;
             }
@@ -597,11 +597,11 @@ class Observer extends Events {
      * @param raw - Retrieve the observer object without converting it to JSON.
      * @returns The value at the specified path.
      */
-    get(path: string, raw: boolean = false): any {
+    get(path: string, raw = false): any {
         const keys = Observer._splitPath(path);
         let node: Observer = this;
         for (let i = 0; i < keys.length; i++) {
-            // eslint-disable-next-line eqeqeq
+             
             if (node == undefined) {
                 return undefined;
             }
@@ -644,7 +644,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully unset and false otherwise.
      */
-    unset(path: string, silent: boolean = false, remote: boolean = false) {
+    unset(path: string, silent = false, remote = false) {
         let i;
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
@@ -706,7 +706,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully removed and false otherwise.
      */
-    remove(path: string, ind: number, silent: boolean = false, remote = false) {
+    remove(path: string, ind: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -766,7 +766,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully removed and false otherwise.
      */
-    removeValue(path: string, value: any, silent: boolean = false, remote: boolean = false) {
+    removeValue(path: string, value: any, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -833,7 +833,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully inserted and false otherwise.
      */
-    insert(path: string, value: any, ind?: number, silent: boolean = false, remote: boolean = false) {
+    insert(path: string, value: any, ind?: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -880,7 +880,7 @@ class Observer extends Events {
         return true;
     }
 
-    private _doInsert(node: Observer, key: string, value: any, ind?: number, allowDuplicates: boolean = false) {
+    private _doInsert(node: Observer, key: string, value: any, ind?: number, allowDuplicates = false) {
         const arr = node._data[key];
 
         if (typeof value === 'object' && !(value instanceof Observer) && value !== null) {
@@ -924,7 +924,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully moved and false otherwise.
      */
-    move(path: string, indOld: number, indNew: number, silent: boolean = false, remote: boolean = false) {
+    move(path: string, indOld: number, indNew: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -983,7 +983,7 @@ class Observer extends Events {
         return true;
     }
 
-    patch(data: Record<string, any>, removeMissingKeys: boolean = false) {
+    patch(data: Record<string, any>, removeMissingKeys = false) {
         if (typeof data !== 'object') {
             return;
         }
@@ -1060,7 +1060,7 @@ class Observer extends Events {
         return obj;
     }
 
-    forEach(fn: Function, target?: any, path: string = '') {
+    forEach(fn: Function, target?: any, path = '') {
         const node = target || this;
 
         for (let i = 0; i < node._keys.length; i++) {

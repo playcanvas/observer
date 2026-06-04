@@ -1,4 +1,4 @@
-import { EventHandle } from './event-handle';
+import type { EventHandle } from './event-handle';
 import { Events } from './events';
 import { Observer } from './observer';
 
@@ -11,11 +11,11 @@ class ObserverHistory extends Events {
 
     private _history: any;
 
-    private _enabled: boolean = true;
+    private _enabled = true;
 
-    private _prefix: string = '';
+    private _prefix = '';
 
-    private _combine: boolean = false;
+    private _combine = false;
 
     private _selfEvents: EventHandle[] = [];
 
