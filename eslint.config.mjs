@@ -11,9 +11,6 @@ export default [
                 ...globals.mocha,
                 ...globals.node
             }
-        },
-        rules: {
-            'no-use-before-define': 'off'
         }
     },
     {
@@ -22,9 +19,6 @@ export default [
             globals: {
                 ...globals.node
             }
-        },
-        rules: {
-            'import-x/no-unresolved': 'off'
         }
     },
     {
@@ -35,19 +29,21 @@ export default [
             }
         },
         rules: {
-            '@typescript-eslint/no-unused-expressions': 'off',
-            'no-unused-expressions': 'off'
+            // chai property assertions trip this rule
+            '@typescript-eslint/no-unused-expressions': 'off'
         }
     },
     {
         files: ['src/events.ts', 'src/observer.ts'],
         rules: {
+            // keep indexed loops in hot observer paths
             '@typescript-eslint/prefer-for-of': 'off'
         }
     },
     {
         files: ['src/observer.ts'],
         rules: {
+            // path traversal rebinds the current observer context
             '@typescript-eslint/no-this-alias': 'off'
         }
     }
