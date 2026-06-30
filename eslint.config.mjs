@@ -16,7 +16,7 @@ export default [
         }
     },
     {
-        files: ['**/*.test.js', '**/*.test.mjs'],
+        files: ['**/*.test.mjs'],
         languageOptions: {
             globals: {
                 ...globals.mocha
