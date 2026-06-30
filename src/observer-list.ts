@@ -34,7 +34,8 @@ class ObserverList<T extends Value = Value> extends Events {
 
     private _itemKey(item: T) {
         const index = this.index;
-        return index && ((item instanceof Observer && item.get(index)) || Reflect.get(Object(item), index));
+        const value: Value = item;
+        return index && ((item instanceof Observer && item.get(index)) || value[index]);
     }
 
     get(index: string | number) {
