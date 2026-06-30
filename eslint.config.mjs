@@ -4,16 +4,6 @@ import globals from 'globals';
 export default [
     ...typescriptConfig,
     {
-        files: ['**/*.ts'],
-        languageOptions: {
-            globals: {
-                ...globals.browser,
-                ...globals.mocha,
-                ...globals.node
-            }
-        }
-    },
-    {
         files: ['**/*.mjs'],
         languageOptions: {
             globals: {
