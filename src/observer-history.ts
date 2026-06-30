@@ -1,18 +1,19 @@
 import type { EventHandle } from './event-handle';
 import { Events } from './events';
+import type { HistoryAction } from './history';
 import { Observer } from './observer';
 import type { Value } from './types';
 
 type History = {
-    add: (action: Value) => void;
+    add: (action: HistoryAction) => void;
 };
 
 /**
  * The ObserverHistory module provides a mechanism for tracking changes to an Observer object and
  * storing them in a history stack.
  */
-class ObserverHistory extends Events {
-    item: Observer;
+class ObserverHistory<T extends object = Record<string, Value>> extends Events {
+    item: Observer<T>;
 
     private _history: History;
 
@@ -27,7 +28,7 @@ class ObserverHistory extends Events {
     /**
      * @param args - Arguments
      */
-    constructor(args: { item?: Observer, history?: History, enabled?: boolean, prefix?: string, combine?: boolean } = {}) {
+    constructor(args: { item?: Observer<T>, history?: History, enabled?: boolean, prefix?: string, combine?: boolean } = {}) {
         super();
 
         this.item = args.item;
