@@ -1,15 +1,16 @@
 import { Events } from './events';
 import { Observer } from './observer';
+import type { Value } from './types';
 
 /**
  * The ObserverList class is a list of Observer objects.
  */
-class ObserverList extends Events {
-    data: any[] = [];
+class ObserverList<T extends Value = Value> extends Events {
+    data: T[] = [];
 
-    private _indexed!: Record<number, Observer>;
+    private _indexed!: Record<string, T>;
 
-    sorted: ((arg0: any, arg1: any) => number) | null = null;
+    sorted: ((arg0: T, arg1: T) => number) | null = null;
 
     index: string | null = null;
 
@@ -17,7 +18,7 @@ class ObserverList extends Events {
      * @param options.sorted - Sorted
      * @param options.index - Index
      */
-    constructor(options: { sorted?: (arg0: any, arg1: any) => number, index?: string } = {}) {
+    constructor(options: { sorted?: (arg0: T, arg1: T) => number, index?: string } = {}) {
         super();
 
         // Make internal property non-enumerable so it doesn't get serialized
@@ -31,25 +32,31 @@ class ObserverList extends Events {
         return this.data.length;
     }
 
-    get(index: any) {
+    private _itemKey(item: T) {
+        const index = this.index;
+        const value: Value = item;
+        return index && ((item instanceof Observer && item.get(index)) || value[index]);
+    }
+
+    get(index: string | number) {
         if (this.index) {
             return this._indexed[index] || null;
         }
 
-        return this.data[index] || null;
+        return this.data[index as number] || null;
     }
 
-    set(index: any, value: any) {
+    set(index: string | number, value: T) {
         if (this.index) {
             this._indexed[index] = value;
         } else {
-            this.data[index] = value;
+            this.data[index as number] = value;
         }
     }
 
-    indexOf(item: any) {
+    indexOf(item: T) {
         if (this.index) {
-            const index = (item instanceof Observer && item.get(this.index)) || item[this.index];
+            const index = this._itemKey(item) as string | number;
             return (this._indexed[index] && index) || null;
         }
 
@@ -57,7 +64,7 @@ class ObserverList extends Events {
         return ind !== -1 ? ind : null;
     }
 
-    position(b: any, fn: (arg0: any, arg1: any) => any) {
+    position(b: T, fn: (arg0: T, arg1: T) => number) {
         const l = this.data;
         let min = 0;
         let max = l.length - 1;
@@ -83,7 +90,7 @@ class ObserverList extends Events {
         return -1;
     }
 
-    positionNextClosest(b: any, fn: ((arg0: any, arg1: any) => number)) {
+    positionNextClosest(b: T, fn: ((arg0: T, arg1: T) => number)) {
         const l = this.data;
         let min = 0;
         let max = l.length - 1;
@@ -125,23 +132,23 @@ class ObserverList extends Events {
         return cur + 1;
     }
 
-    has(item: any) {
+    has(item: T) {
         if (this.index) {
-            const index = (item instanceof Observer && item.get(this.index)) || item[this.index];
+            const index = this._itemKey(item) as string | number;
             return !!this._indexed[index];
         }
 
         return this.data.indexOf(item) !== -1;
     }
 
-    add(item: any) {
+    add(item: T) {
         if (this.has(item)) {
             return null;
         }
 
         let index = this.data.length;
         if (this.index) {
-            index = (item instanceof Observer && item.get(this.index)) || item[this.index];
+            index = this._itemKey(item) as number;
             this._indexed[index] = item;
         }
 
@@ -161,7 +168,7 @@ class ObserverList extends Events {
 
         this.emit('add', item, index, pos);
         if (this.index) {
-            const id = item.get(this.index);
+            const id = this._itemKey(item);
             if (id) {
                 this.emit(`add[${id}]`, item, index, pos);
             }
@@ -170,7 +177,7 @@ class ObserverList extends Events {
         return pos;
     }
 
-    move(item: any, pos: number) {
+    move(item: T, pos: number) {
         const ind = this.data.indexOf(item);
         this.data.splice(ind, 1);
         if (pos === -1) {
@@ -182,7 +189,7 @@ class ObserverList extends Events {
         this.emit('move', item, pos);
     }
 
-    remove(item: any) {
+    remove(item: T) {
         if (!this.has(item)) {
             return;
         }
@@ -191,7 +198,7 @@ class ObserverList extends Events {
 
         let index = ind;
         if (this.index) {
-            index = (item instanceof Observer && item.get(this.index)) || item[this.index];
+            index = this._itemKey(item) as number;
             delete this._indexed[index];
         }
 
@@ -200,7 +207,7 @@ class ObserverList extends Events {
         this.emit('remove', item, index);
     }
 
-    removeByKey(index: any) {
+    removeByKey(index: string | number) {
         let item;
 
         if (this.index) {
@@ -217,19 +224,20 @@ class ObserverList extends Events {
 
             this.emit('remove', item, ind);
         } else {
-            if (this.data.length < index) {
+            const ind = index as number;
+            if (this.data.length < ind) {
                 return;
             }
 
-            item = this.data[index];
+            item = this.data[ind];
 
-            this.data.splice(index, 1);
+            this.data.splice(ind, 1);
 
-            this.emit('remove', item, index);
+            this.emit('remove', item, ind);
         }
     }
 
-    removeBy(fn: (arg0: any) => any) {
+    removeBy(fn: (arg0: T) => unknown) {
         let i = this.data.length;
         while (i--) {
             if (!fn(this.data[i])) {
@@ -237,7 +245,7 @@ class ObserverList extends Events {
             }
 
             if (this.index) {
-                delete this._indexed[this.data[i][this.index]];
+                delete this._indexed[this._itemKey(this.data[i]) as string | number];
             }
             this.data.splice(i, 1);
 
@@ -257,13 +265,13 @@ class ObserverList extends Events {
         }
     }
 
-    forEach(fn: (arg0: any, arg1: any) => void) {
+    forEach(fn: (arg0: T, arg1: Value) => void) {
         for (let i = 0; i < this.data.length; i++) {
-            fn(this.data[i], (this.index && this.data[i][this.index]) || i);
+            fn(this.data[i], (this.index && this._itemKey(this.data[i])) || i);
         }
     }
 
-    find(fn: (arg0: any) => any) {
+    find(fn: (arg0: T) => unknown) {
         const items = [];
         for (let i = 0; i < this.data.length; i++) {
             if (!fn(this.data[i])) {
@@ -272,7 +280,7 @@ class ObserverList extends Events {
 
             let index = i;
             if (this.index) {
-                index = this.data[i][this.index];
+                index = this._itemKey(this.data[i]) as number;
             }
 
             items.push([index, this.data[i]]);
@@ -280,7 +288,7 @@ class ObserverList extends Events {
         return items;
     }
 
-    findOne(fn: (arg0: any) => any) {
+    findOne(fn: (arg0: T) => unknown) {
         for (let i = 0; i < this.data.length; i++) {
             if (!fn(this.data[i])) {
                 continue;
@@ -288,7 +296,7 @@ class ObserverList extends Events {
 
             let index = i;
             if (this.index) {
-                index = this.data[i][this.index];
+                index = this._itemKey(this.data[i]) as number;
             }
 
             return [index, this.data[i]];
@@ -296,11 +304,11 @@ class ObserverList extends Events {
         return null;
     }
 
-    map(fn: (value: any, index: number, array: any[]) => any) {
+    map<U>(fn: (value: T, index: number, array: T[]) => U) {
         return this.data.map(fn);
     }
 
-    sort(fn: (a: any, b: any) => number) {
+    sort(fn: (a: T, b: T) => number) {
         this.data.sort(fn);
     }
 
@@ -309,7 +317,7 @@ class ObserverList extends Events {
     }
 
     json() {
-        const items = this.array();
+        const items: Value[] = this.array();
         for (let i = 0; i < items.length; i++) {
             if (items[i] instanceof Observer) {
                 items[i] = items[i].json();

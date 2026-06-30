@@ -1,35 +1,7 @@
-import playcanvasConfig from '@playcanvas/eslint-config';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
+import typescriptConfig from '@playcanvas/eslint-config/typescript';
 import globals from 'globals';
 
-export default [
-    ...playcanvasConfig,
-    {
-        files: ['**/*.ts'],
-        languageOptions: {
-            parser: tsParser,
-            parserOptions: {
-                requireConfigFile: false
-            },
-            globals: {
-                ...globals.browser,
-                ...globals.mocha,
-                ...globals.node
-            }
-        },
-        plugins: {
-            '@typescript-eslint': tsPlugin
-        },
-        rules: {
-            'jsdoc/require-jsdoc': 'off',
-            'jsdoc/require-param': 'off',
-            'jsdoc/require-param-type': 'off',
-            'jsdoc/require-returns': 'off',
-            'jsdoc/require-returns-type': 'off',
-            'no-use-before-define': 'off'
-        }
-    },
+const javascriptConfig = [
     {
         files: ['**/*.mjs'],
         languageOptions: {
@@ -38,27 +10,39 @@ export default [
             }
         },
         rules: {
-            'import/no-unresolved': 'off'
+            // ci lints before dist/index.mjs is built
+            'import-x/no-unresolved': 'off'
         }
     },
     {
-        settings: {
-            'import/resolver': {
-                node: {
-                    extensions: ['.js', '.ts', '.mjs']
-                }
-            }
-        }
-    },
-    {
-        files: ['**/*.test.js', '**/*.test.mjs'],
+        files: ['**/*.test.mjs'],
         languageOptions: {
             globals: {
                 ...globals.mocha
             }
         },
         rules: {
-            'no-unused-expressions': 'off'
+            // chai property assertions trip this rule
+            '@typescript-eslint/no-unused-expressions': 'off'
+        }
+    },
+];
+
+export default [
+    ...typescriptConfig,
+    ...javascriptConfig,
+    {
+        files: ['src/events.ts', 'src/observer.ts'],
+        rules: {
+            // keep indexed loops in hot observer paths
+            '@typescript-eslint/prefer-for-of': 'off'
+        }
+    },
+    {
+        files: ['src/observer.ts'],
+        rules: {
+            // path traversal rebinds the current observer context
+            '@typescript-eslint/no-this-alias': 'off'
         }
     }
 ];

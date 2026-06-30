@@ -1,3 +1,5 @@
+import type { Value } from './types';
+
 /**
  * Determines whether two arrays are deeply equal. Two arrays are considered equal if they have the
  * same length and corresponding elements are equal. This function also supports nested arrays,
@@ -15,7 +17,7 @@
  * arrayEquals([1, 2, 3], null); // false
  * arrayEquals(null, null); // false
  */
-const arrayEquals = (a: any[], b: any[]) => {
+const arrayEquals = (a: Value[], b: Value[]) => {
     if (!a || !b) {
         return false;
     }
@@ -51,7 +53,7 @@ const arrayEquals = (a: any[], b: any[]) => {
  * copy[0][0] = 99;
  * console.log(original[0][0]); // 1 (unchanged)
  */
-const deepCopyArray = (arr: any[]): any[] => {
+const deepCopyArray = (arr: Value[]): Value[] => {
     const copy = arr.slice(0);
     for (let i = 0; i < copy.length; i++) {
         if (copy[i] instanceof Array) {

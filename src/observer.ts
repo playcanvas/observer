@@ -1,15 +1,38 @@
 import { Events } from './events';
-import { ObserverHistory } from './observer-history';
+import type { ObserverHistory } from './observer-history';
+import type { Value } from './types';
 import { arrayEquals, deepCopyArray } from './utils';
+
+const has = (obj: Value, key: PropertyKey) => Object.prototype.hasOwnProperty.call(obj, key);
 
 /**
  * The ObserverSync class is used to construct an interface for synchronizing changes from Observer
  * to other services.
  */
 export type ObserverSync = Events & {
-    write: (...args: any[]) => void;
+    write: (...args: Value[]) => void;
     enabled: boolean;
 }
+
+type Key<T extends object> = keyof T & string;
+
+type LatestFn<T extends object> = () => Observer<T>;
+
+type ObserverOptions<T extends object> = {
+    parent?: Observer<T>,
+    parentPath?: string,
+    parentField?: Value,
+    parentKey?: Value,
+    latestFn?: LatestFn<T>,
+    pathsWithDuplicates?: string[]
+};
+
+type Schema = {
+    has: (path: string) => boolean;
+    get: (path: string) => { type: { name: string } };
+};
+
+type EachFn = (path: string, type: string, value: Value, key: string) => void;
 
 /**
  * The Observer class is used to observe and manage changes to an object. It allows for tracking
@@ -35,26 +58,26 @@ export type ObserverSync = Events & {
  *
  * observer.set('name', 'Jane'); // Logs: Name changed from John to Jane
  */
-class Observer extends Events {
+class Observer<T extends object = Record<string, Value>> extends Events {
     private _destroyed!: boolean;
 
     private _path!: string;
 
     private _keys!: string[];
 
-    private _data!: any;
+    private _data!: Record<string, Value>;
 
     private _pathsWithDuplicates!: Set<string> | null;
 
-    private _parent!: Observer | null;
+    private _parent!: Observer<T> | null;
 
     private _parentPath!: string;
 
-    private _parentField!: any;
+    private _parentField!: Value;
 
-    private _parentKey!: any;
+    private _parentKey!: Value;
 
-    private _latestFn!: Function | null;
+    private _latestFn!: LatestFn<T> | null;
 
     private _silent!: boolean;
 
@@ -62,7 +85,7 @@ class Observer extends Events {
 
     sync: ObserverSync;
 
-    schema: any;
+    schema: Schema;
 
     /**
      * Creates a new Observer instance.
@@ -70,19 +93,13 @@ class Observer extends Events {
      * @param data - The initial data to observe.
      * @param options - Additional options for the observer.
      */
-    constructor(data?: object, options: {
-        parent?: Observer,
-        parentPath?: string,
-        parentField?: any,
-        parentKey?: any,
-        latestFn?: Function,
-        pathsWithDuplicates?: string[]
-    } = {}) {
+    constructor(data?: Partial<T>, options?: ObserverOptions<T>);
+    constructor(data?: Value, options: ObserverOptions<T> = {}) {
         super();
 
         // Make internal properties non-enumerable so they don't get serialized
         // when the object is converted to JSON (e.g., for ShareDB sync)
-        const props: [string, any][] = [
+        const props: [string, Value][] = [
             ['_destroyed', false],
             ['_path', ''],
             ['_keys', []],
@@ -102,7 +119,7 @@ class Observer extends Events {
         this.patch(data);
 
         const propagate = function (evt: string) {
-            return function (path: string, arg1: any, arg2: any, arg3: any) {
+            return function (path: string, arg1: Value, arg2: Value, arg3: Value) {
                 if (!this._parent) {
                     return;
                 }
@@ -143,7 +160,7 @@ class Observer extends Events {
     // cache calls to path.split(path, '.')
     // as they take considerable time especially during loading
     // if there are a lot of observers like entities, assets etc.
-    private static _splitPathsCache: Record<string, any> = {};
+    private static _splitPathsCache: Record<string, string[]> = {};
 
     private static _splitPath(path: string) {
         const cache = Observer._splitPathsCache;
@@ -188,7 +205,7 @@ class Observer extends Events {
         }
     }
 
-    private _prepare(target: Observer, key: string, value: any, silent: boolean = false, remote: boolean = false) {
+    private _prepare(target: Observer<T>, key: string, value: Value, silent = false, remote = false) {
         let i;
         let state;
         const path = (target._path ? (`${target._path}.`) : '') + key;
@@ -292,20 +309,21 @@ class Observer extends Events {
      * @param force - If true, the value will be set even if it is the same as the current value.
      * @returns Returns true if the value was successfully set and false otherwise.
      */
-    set(path: string, value: any, silent: boolean = false, remote: boolean = false, force: boolean = false) {
+    set<P extends string>(path: P, value: P extends Key<T> ? T[P] : Value, silent?: boolean, remote?: boolean, force?: boolean): boolean;
+    set(path: string, value: Value, silent = false, remote = false, force = false) {
         let i;
-        let valueOld: any;
+        let valueOld: Value;
         let keys = Observer._splitPath(path);
         const length = keys.length;
         const key = keys[length - 1];
-        let node = this;
+        let node: Value = this;
         let nodePath = '';
-        let obj = this;
+        let obj: Observer<T> = this;
         let state;
 
         for (i = 0; i < length - 1; i++) {
             if (node instanceof Array) {
-                node = node[keys[i]];
+                node = node[parseInt(keys[i], 10)];
 
                 if (node instanceof Observer) {
                     path = keys.slice(i + 1).join('.');
@@ -367,7 +385,7 @@ class Observer extends Events {
             }
 
             return true;
-        } else if (node._data && !node._data.hasOwnProperty(key)) {
+        } else if (node._data && !has(node._data, key)) {
             if (typeof value === 'object') {
                 return obj._prepare(node, key, value, false, remote);
             }
@@ -470,10 +488,10 @@ class Observer extends Events {
             let c;
 
             for (const n in node._data[key]._data) {
-                if (!value.hasOwnProperty(n)) {
+                if (!has(value, n)) {
                     c = obj.unset(`${path}.${n}`, true);
                     if (c) changed = true;
-                } else if (node._data[key]._data.hasOwnProperty(n)) {
+                } else if (has(node._data[key]._data, n)) {
                     if (!obj._equals(node._data[key]._data[n], value[n])) {
                         c = obj.set(`${path}.${n}`, value[n], true);
                         if (c) changed = true;
@@ -485,11 +503,11 @@ class Observer extends Events {
             }
 
             for (i = 0; i < keys.length; i++) {
-                if (value[keys[i]] === undefined && node._data[key]._data.hasOwnProperty(keys[i])) {
+                if (value[keys[i]] === undefined && has(node._data[key]._data, keys[i])) {
                     c = obj.unset(`${path}.${keys[i]}`, true);
                     if (c) changed = true;
                 } else if (typeof value[keys[i]] === 'object') {
-                    if (node._data[key]._data.hasOwnProperty(keys[i])) {
+                    if (has(node._data[key]._data, keys[i])) {
                         c = obj.set(`${path}.${keys[i]}`, value[keys[i]], true);
                         if (c) changed = true;
                     } else {
@@ -536,8 +554,8 @@ class Observer extends Events {
             return false;
         }
 
-        let data;
-        if (!node.hasOwnProperty('_data') && node.hasOwnProperty(key)) {
+        let data: Record<string, Value>;
+        if (!has(node, '_data') && has(node, key)) {
             data = node;
         } else {
             data = node._data;
@@ -576,16 +594,16 @@ class Observer extends Events {
      */
     has(path: string) {
         const keys = Observer._splitPath(path);
-        let node: Observer = this;
+        let node: Value = this;
         for (let i = 0, len = keys.length; i < len; i++) {
-            // eslint-disable-next-line eqeqeq
+
             if (node == undefined) {
                 return undefined;
             }
             if (node._data) {
                 node = node._data[keys[i]];
             } else {
-                node = (node as any)[keys[i]];
+                node = node[keys[i]];
             }
         }
 
@@ -597,11 +615,13 @@ class Observer extends Events {
      * @param raw - Retrieve the observer object without converting it to JSON.
      * @returns The value at the specified path.
      */
-    get(path: string, raw: boolean = false): any {
+    get<P extends string>(path: P, raw: true): Value;
+    get<P extends string>(path: P, raw?: false): P extends Key<T> ? T[P] : Value;
+    get(path: string, raw = false) {
         const keys = Observer._splitPath(path);
-        let node: Observer = this;
+        let node: Value = this;
         for (let i = 0; i < keys.length; i++) {
-            // eslint-disable-next-line eqeqeq
+
             if (node == undefined) {
                 return undefined;
             }
@@ -609,7 +629,7 @@ class Observer extends Events {
             if (node._data) {
                 node = node._data[keys[i]];
             } else {
-                node = (node as any)[keys[i]];
+                node = node[keys[i]];
             }
         }
 
@@ -628,7 +648,7 @@ class Observer extends Events {
         return this.get(path, true);
     }
 
-    private _equals(a: any, b: any) {
+    private _equals(a: Value, b: Value) {
         if (a === b) {
             return true;
         } else if (a instanceof Array && b instanceof Array && arrayEquals(a, b)) {
@@ -644,7 +664,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully unset and false otherwise.
      */
-    unset(path: string, silent: boolean = false, remote: boolean = false) {
+    unset(path: string, silent = false, remote = false) {
         let i;
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
@@ -653,7 +673,7 @@ class Observer extends Events {
 
         for (i = 0; i < keys.length - 1; i++) {
             if (node instanceof Array) {
-                node = node[keys[i]];
+                node = node[parseInt(keys[i], 10)];
                 if (node instanceof Observer) {
                     path = keys.slice(i + 1).join('.');
                     obj = node;
@@ -663,7 +683,7 @@ class Observer extends Events {
             }
         }
 
-        if (!node._data || !node._data.hasOwnProperty(key)) {
+        if (!node._data || !has(node._data, key)) {
             return false;
         }
 
@@ -706,7 +726,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully removed and false otherwise.
      */
-    remove(path: string, ind: number, silent: boolean = false, remote = false) {
+    remove(path: string, ind: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -719,14 +739,14 @@ class Observer extends Events {
                     path = keys.slice(i + 1).join('.');
                     obj = node;
                 }
-            } else if (node._data && node._data.hasOwnProperty(keys[i])) {
+            } else if (node._data && has(node._data, keys[i])) {
                 node = node._data[keys[i]];
             } else {
                 return false;
             }
         }
 
-        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array)) {
+        if (!node._data || !has(node._data, key) || !(node._data[key] instanceof Array)) {
             return false;
         }
 
@@ -766,7 +786,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully removed and false otherwise.
      */
-    removeValue(path: string, value: any, silent: boolean = false, remote: boolean = false) {
+    removeValue(path: string, value: Value, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -779,14 +799,14 @@ class Observer extends Events {
                     path = keys.slice(i + 1).join('.');
                     obj = node;
                 }
-            } else if (node._data && node._data.hasOwnProperty(keys[i])) {
+            } else if (node._data && has(node._data, keys[i])) {
                 node = node._data[keys[i]];
             } else {
                 return;
             }
         }
 
-        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array)) {
+        if (!node._data || !has(node._data, key) || !(node._data[key] instanceof Array)) {
             return;
         }
 
@@ -833,7 +853,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully inserted and false otherwise.
      */
-    insert(path: string, value: any, ind?: number, silent: boolean = false, remote: boolean = false) {
+    insert(path: string, value: Value, ind?: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -846,14 +866,14 @@ class Observer extends Events {
                     path = keys.slice(i + 1).join('.');
                     obj = node;
                 }
-            } else if (node._data && node._data.hasOwnProperty(keys[i])) {
+            } else if (node._data && has(node._data, keys[i])) {
                 node = node._data[keys[i]];
             } else {
                 return;
             }
         }
 
-        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array)) {
+        if (!node._data || !has(node._data, key) || !(node._data[key] instanceof Array)) {
             return;
         }
 
@@ -880,7 +900,7 @@ class Observer extends Events {
         return true;
     }
 
-    private _doInsert(node: Observer, key: string, value: any, ind?: number, allowDuplicates: boolean = false) {
+    private _doInsert(node: Observer<T>, key: string, value: Value, ind?: number, allowDuplicates = false) {
         const arr = node._data[key];
 
         if (typeof value === 'object' && !(value instanceof Observer) && value !== null) {
@@ -924,7 +944,7 @@ class Observer extends Events {
      * @param remote - State value passed to the set event used to disable remote event emission.
      * @returns Returns true if the value was successfully moved and false otherwise.
      */
-    move(path: string, indOld: number, indNew: number, silent: boolean = false, remote: boolean = false) {
+    move(path: string, indOld: number, indNew: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
         const key = keys[keys.length - 1];
         let node = this;
@@ -937,14 +957,14 @@ class Observer extends Events {
                     path = keys.slice(i + 1).join('.');
                     obj = node;
                 }
-            } else if (node._data && node._data.hasOwnProperty(keys[i])) {
+            } else if (node._data && has(node._data, keys[i])) {
                 node = node._data[keys[i]];
             } else {
                 return;
             }
         }
 
-        if (!node._data || !node._data.hasOwnProperty(key) || !(node._data[key] instanceof Array)) {
+        if (!node._data || !has(node._data, key) || !(node._data[key] instanceof Array)) {
             return;
         }
 
@@ -983,13 +1003,14 @@ class Observer extends Events {
         return true;
     }
 
-    patch(data: Record<string, any>, removeMissingKeys: boolean = false) {
+    patch(data: Partial<T>, removeMissingKeys?: boolean): void;
+    patch(data: Value, removeMissingKeys = false) {
         if (typeof data !== 'object') {
             return;
         }
 
         for (const key in data) {
-            if (typeof data[key] === 'object' && !this._data.hasOwnProperty(key)) {
+            if (typeof data[key] === 'object' && !has(this._data, key)) {
                 this._prepare(this, key, data[key]);
             } else if (this._data[key] !== data[key]) {
                 this.set(key, data[key]);
@@ -998,7 +1019,7 @@ class Observer extends Events {
 
         if (removeMissingKeys) {
             for (const key in this._data) {
-                if (!data.hasOwnProperty(key)) {
+                if (!has(data, key)) {
                     this.unset(key);
                 }
             }
@@ -1009,9 +1030,11 @@ class Observer extends Events {
      * @param target - The object to JSONify.
      * @returns The current state of the object tracked by the observer.
      */
-    json(target?: any) {
+    json(): T;
+    json(target: Value): Value;
+    json(target?: Value) {
         let key, n;
-        let obj: Record<string, any> = { };
+        let obj: Record<string, Value> = { };
         const node = target === undefined ? this : target;
         let len, nlen;
 
@@ -1049,7 +1072,7 @@ class Observer extends Events {
                 }
             } else if (typeof node === 'object') {
                 for (key in node) {
-                    if (node.hasOwnProperty(key)) {
+                    if (has(node, key)) {
                         obj[key] = node[key];
                     }
                 }
@@ -1060,7 +1083,7 @@ class Observer extends Events {
         return obj;
     }
 
-    forEach(fn: Function, target?: any, path: string = '') {
+    forEach(fn: EachFn, target?: Value, path = '') {
         const node = target || this;
 
         for (let i = 0; i < node._keys.length; i++) {
@@ -1086,7 +1109,7 @@ class Observer extends Events {
      *
      * @returns The latest instance of the observer.
      */
-    latest(): Observer {
+    latest(): Observer<T> {
         return this._latestFn ? this._latestFn() : this;
     }
 

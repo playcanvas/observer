@@ -1,4 +1,5 @@
 import type { Events, HandleEvent } from './events';
+import type { Value } from './types';
 
 
 /**
@@ -48,12 +49,12 @@ class EventHandle {
      * Invokes the callback function associated with the event handle. This method directly
      * triggers the event's callback without the event being emitted by the event system.
      */
-    call(_events: Events, ..._args: any[]) {
+    call(events: Events, ...args: Value[]) {
         if (!this.fn) {
             return;
         }
 
-        this.fn.call(this.owner, arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
+        this.fn.call(this.owner, events, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
     }
 
     /**

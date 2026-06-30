@@ -1,4 +1,5 @@
 import { EventHandle } from './event-handle';
+import type { Value } from './types';
 
 /**
  * Callback used by {@link Events} and {@link EventHandle} functions. Note the callback is limited to 8 arguments.
@@ -12,7 +13,7 @@ import { EventHandle } from './event-handle';
  * @param arg7 - Seventh argument that is passed from caller.
  * @param arg8 - Eighth argument that is passed from caller.
  */
-export type HandleEvent = (arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any, arg7?: any, arg8?: any) => void;
+export type HandleEvent = (arg1?: Value, arg2?: Value, arg3?: Value, arg4?: Value, arg5?: Value, arg6?: Value, arg7?: Value, arg8?: Value) => void;
 
 /**
  * Base class for event handling, providing mechanisms to register, emit, and unbind events. This
@@ -47,7 +48,7 @@ class Events {
     constructor() {
         // Make internal properties non-enumerable so they don't get serialized
         // when the object is converted to JSON (e.g., for ShareDB sync)
-        const props: [string, any][] = [
+        const props: [string, Value][] = [
             ['_additionalEmitters', []],
             ['_events', {}],
             ['_suspendEvents', false]
@@ -157,7 +158,7 @@ class Events {
      * // Emit the event with more arguments
      * events.emit('testEvent', 'value1', 'value2', 'value3', 'value4');
      */
-    emit(name: string, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any, arg6?: any, arg7?: any) {
+    emit(name: string, arg0?: Value, arg1?: Value, arg2?: Value, arg3?: Value, arg4?: Value, arg5?: Value, arg6?: Value, arg7?: Value) {
         if (this._suspendEvents) return this;
 
         let events = this._events[name];
