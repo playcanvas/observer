@@ -1,8 +1,7 @@
 import typescriptConfig from '@playcanvas/eslint-config/typescript';
 import globals from 'globals';
 
-export default [
-    ...typescriptConfig,
+const javascriptConfig = [
     {
         files: ['**/*.mjs'],
         languageOptions: {
@@ -27,6 +26,11 @@ export default [
             '@typescript-eslint/no-unused-expressions': 'off'
         }
     },
+];
+
+export default [
+    ...typescriptConfig,
+    ...javascriptConfig,
     {
         files: ['src/events.ts', 'src/observer.ts'],
         rules: {
