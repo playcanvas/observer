@@ -10,5 +10,5 @@
         "outDir": "dist",
         "target": "es6"
     },
-    "include": ["src", "rollup.config.mjs"],
+    "include": ["src", "test/types.ts", "rollup.config.mjs"],
 }
