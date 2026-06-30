@@ -310,9 +310,9 @@ class Observer extends Events {
         let keys = Observer._splitPath(path);
         const length = keys.length;
         const key = keys[length - 1];
-        let node = this;
+        let node: Value = this;
         let nodePath = '';
-        let obj = this;
+        let obj: Observer = this;
         let state;
 
         for (i = 0; i < length - 1; i++) {
@@ -550,7 +550,7 @@ class Observer extends Events {
 
         let data: Record<string, Value>;
         if (!has(node, '_data') && has(node, key)) {
-            data = node as unknown as Record<string, Value>;
+            data = node;
         } else {
             data = node._data;
         }
@@ -588,16 +588,16 @@ class Observer extends Events {
      */
     has(path: string) {
         const keys = Observer._splitPath(path);
-        let node: Observer = this;
+        let node: Value = this;
         for (let i = 0, len = keys.length; i < len; i++) {
-             
+
             if (node == undefined) {
                 return undefined;
             }
             if (node._data) {
                 node = node._data[keys[i]];
             } else {
-                node = (node as unknown as Record<string, Observer>)[keys[i]];
+                node = node[keys[i]];
             }
         }
 
@@ -611,7 +611,7 @@ class Observer extends Events {
      */
     get(path: string, raw = false) {
         const keys = Observer._splitPath(path);
-        let node: Observer = this;
+        let node: Value = this;
         for (let i = 0; i < keys.length; i++) {
 
             if (node == undefined) {
@@ -619,9 +619,9 @@ class Observer extends Events {
             }
 
             if (node._data) {
-                node = node._data[keys[i]] as Observer;
+                node = node._data[keys[i]];
             } else {
-                node = (node as unknown as Record<string, Observer>)[keys[i]];
+                node = node[keys[i]];
             }
         }
 
