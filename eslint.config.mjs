@@ -19,6 +19,10 @@ export default [
             globals: {
                 ...globals.node
             }
+        },
+        rules: {
+            // ci lints before dist/index.mjs is built
+            'import-x/no-unresolved': 'off'
         }
     },
     {
