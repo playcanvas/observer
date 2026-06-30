@@ -40,6 +40,12 @@ export default [
         }
     },
     {
+        files: ['src/events.ts', 'src/observer.ts'],
+        rules: {
+            '@typescript-eslint/prefer-for-of': 'off'
+        }
+    },
+    {
         files: ['src/observer.ts'],
         rules: {
             '@typescript-eslint/no-this-alias': 'off'

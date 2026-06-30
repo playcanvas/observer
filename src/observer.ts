@@ -612,16 +612,16 @@ class Observer extends Events {
     get(path: string, raw = false) {
         const keys = Observer._splitPath(path);
         let node: Observer = this;
-        for (const key of keys) {
+        for (let i = 0; i < keys.length; i++) {
 
             if (node == undefined) {
                 return undefined;
             }
 
             if (node._data) {
-                node = node._data[key] as Observer;
+                node = node._data[keys[i]] as Observer;
             } else {
-                node = (node as unknown as Record<string, Observer>)[key];
+                node = (node as unknown as Record<string, Observer>)[keys[i]];
             }
         }
 
@@ -1075,7 +1075,8 @@ class Observer extends Events {
     forEach(fn: EachFn, target?: Value, path = '') {
         const node = target || this;
 
-        for (const key of node._keys) {
+        for (let i = 0; i < node._keys.length; i++) {
+            const key = node._keys[i];
             const value = node._data[key];
             const type = (this.schema && this.schema.has(path + key) && this.schema.get(path + key).type.name.toLowerCase()) || typeof value;
 

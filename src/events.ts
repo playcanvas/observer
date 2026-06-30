@@ -165,13 +165,13 @@ class Events {
         if (events && events.length) {
             events = events.slice(0);
 
-            for (const event of events) {
-                if (!event) {
+            for (let i = 0; i < events.length; i++) {
+                if (!events[i]) {
                     continue;
                 }
 
                 try {
-                    event.call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+                    events[i].call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
                 } catch (ex) {
                     console.info('%c%s %c(event error)', 'color: #06f', name, 'color: #f00');
                     console.log(ex.stack);
