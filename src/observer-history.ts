@@ -1,15 +1,20 @@
 import type { EventHandle } from './event-handle';
 import { Events } from './events';
 import { Observer } from './observer';
+import type { Value } from './types';
+
+type History = {
+    add: (action: Value) => void;
+};
 
 /**
  * The ObserverHistory module provides a mechanism for tracking changes to an Observer object and
  * storing them in a history stack.
  */
 class ObserverHistory extends Events {
-    item: any;
+    item: Observer;
 
-    private _history: any;
+    private _history: History;
 
     private _enabled = true;
 
@@ -22,7 +27,7 @@ class ObserverHistory extends Events {
     /**
      * @param args - Arguments
      */
-    constructor(args: { item?: any, history?: any, enabled?: boolean, prefix?: string, combine?: boolean } = {}) {
+    constructor(args: { item?: Observer, history?: History, enabled?: boolean, prefix?: string, combine?: boolean } = {}) {
         super();
 
         this.item = args.item;
@@ -35,7 +40,7 @@ class ObserverHistory extends Events {
     }
 
     private _initialize() {
-        this._selfEvents.push(this.item.on('*:set', (path: string, value: any, valueOld: any) => {
+        this._selfEvents.push(this.item.on('*:set', (path: string, value: Value, valueOld: Value) => {
             if (!this._enabled || !this._history) return;
 
             // need jsonify
@@ -80,7 +85,7 @@ class ObserverHistory extends Events {
             this._history.add(action);
         }));
 
-        this._selfEvents.push(this.item.on('*:unset', (path: string, valueOld: any) => {
+        this._selfEvents.push(this.item.on('*:unset', (path: string, valueOld: Value) => {
             if (!this._enabled || !this._history) return;
 
             // action
@@ -108,7 +113,7 @@ class ObserverHistory extends Events {
             this._history.add(action);
         }));
 
-        this._selfEvents.push(this.item.on('*:insert', (path: string, value: any, ind: number) => {
+        this._selfEvents.push(this.item.on('*:insert', (path: string, value: Value, ind: number) => {
             if (!this._enabled || !this._history) return;
 
             // need jsonify
@@ -140,7 +145,7 @@ class ObserverHistory extends Events {
             this._history.add(action);
         }));
 
-        this._selfEvents.push(this.item.on('*:remove', (path: string, value: any, ind: number) => {
+        this._selfEvents.push(this.item.on('*:remove', (path: string, value: Value, ind: number) => {
             if (!this._enabled || !this._history) return;
 
             // need jsonify
@@ -172,7 +177,7 @@ class ObserverHistory extends Events {
             this._history.add(action);
         }));
 
-        this._selfEvents.push(this.item.on('*:move', (path: string, value: any, ind: number, indOld: number) => {
+        this._selfEvents.push(this.item.on('*:move', (path: string, value: Value, ind: number, indOld: number) => {
             if (!this._enabled || !this._history) return;
 
             // action

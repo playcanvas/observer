@@ -35,7 +35,14 @@ export default [
             }
         },
         rules: {
+            '@typescript-eslint/no-unused-expressions': 'off',
             'no-unused-expressions': 'off'
+        }
+    },
+    {
+        files: ['src/observer.ts'],
+        rules: {
+            '@typescript-eslint/no-this-alias': 'off'
         }
     }
 ];
