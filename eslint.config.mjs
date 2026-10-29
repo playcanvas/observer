@@ -1,41 +1,12 @@
 import typescriptConfig from '@playcanvas/eslint-config/typescript';
-import globals from 'globals';
-
-const javascriptConfig = [
-    {
-        files: ['**/*.mjs'],
-        languageOptions: {
-            globals: {
-                ...globals.node
-            }
-        },
-        rules: {
-            // ci lints before dist/index.mjs is built
-            'import-x/no-unresolved': 'off'
-        }
-    },
-    {
-        files: ['**/*.test.mjs'],
-        languageOptions: {
-            globals: {
-                ...globals.mocha
-            }
-        },
-        rules: {
-            // chai property assertions trip this rule
-            '@typescript-eslint/no-unused-expressions': 'off'
-        }
-    },
-];
 
 export default [
     ...typescriptConfig,
-    ...javascriptConfig,
     {
-        files: ['src/events.ts', 'src/observer.ts'],
+        files: ['**/*.mjs'],
         rules: {
-            // keep indexed loops in hot observer paths
-            '@typescript-eslint/prefer-for-of': 'off'
+            // ci lints before dist/index.mjs is built
+            'import-x/no-unresolved': 'off'
         }
     },
     {

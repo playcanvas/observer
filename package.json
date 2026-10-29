@@ -37,11 +37,10 @@
     "README.md"
   ],
   "devDependencies": {
-    "@playcanvas/eslint-config": "3.0.0-beta.6",
+    "@playcanvas/eslint-config": "3.0.0-beta.9",
     "@rollup/plugin-typescript": "12.3.0",
     "chai": "6.2.2",
     "eslint": "9.39.4",
-    "globals": "17.5.0",
     "mocha": "11.7.5",
     "publint": "0.3.18",
     "rollup": "4.60.1",
