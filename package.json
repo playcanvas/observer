@@ -40,15 +40,15 @@
     "@playcanvas/eslint-config": "3.0.0",
     "@rollup/plugin-typescript": "12.3.1",
     "chai": "6.3.0",
-    "eslint": "9.39.5",
-    "mocha": "11.8.0",
+    "eslint": "10.14.0",
+    "mocha": "12.0.3",
     "publint": "0.3.25",
     "rollup": "4.68.0",
     "tslib": "2.9.1",
     "typedoc": "0.28.20",
     "typedoc-plugin-mdn-links": "5.1.1",
     "typedoc-plugin-missing-exports": "4.1.4",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "scripts": {
     "build": "rollup -c && npm run build:types",
