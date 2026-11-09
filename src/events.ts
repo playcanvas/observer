@@ -50,7 +50,8 @@ class Events {
         // when the object is converted to JSON (e.g., for ShareDB sync)
         const props: [string, Value][] = [
             ['_additionalEmitters', []],
-            ['_events', {}],
+            // no prototype, so event names like 'constructor' don't collide with its members
+            ['_events', Object.create(null)],
             ['_suspendEvents', false]
         ];
         for (const [name, value] of props) {
@@ -236,7 +237,7 @@ class Events {
                 delete this._events[name];
             }
         } else {
-            this._events = { };
+            this._events = Object.create(null);
         }
 
         return this;

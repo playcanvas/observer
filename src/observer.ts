@@ -5,6 +5,12 @@ import { arrayEquals, deepCopyArray } from './utils';
 
 const has = (obj: Value, key: PropertyKey) => Object.prototype.hasOwnProperty.call(obj, key);
 
+// On a plain object '__proto__' resolves to Object.prototype, so writing through a path or data key
+// with this name would modify the prototype shared by every object. Such keys are ignored.
+const UNSAFE_KEY = '__proto__';
+
+const isUnsafePath = (keys: string[]) => keys.indexOf(UNSAFE_KEY) !== -1;
+
 /**
  * The ObserverSync class is used to construct an interface for synchronizing changes from Observer
  * to other services.
@@ -160,7 +166,8 @@ class Observer<T extends object = Record<string, Value>> extends Events {
     // cache calls to path.split(path, '.')
     // as they take considerable time especially during loading
     // if there are a lot of observers like entities, assets etc.
-    private static _splitPathsCache: Record<string, string[]> = {};
+    // (no prototype, so paths like 'constructor' don't collide with its members)
+    private static _splitPathsCache: Record<string, string[]> = Object.create(null);
 
     private static _splitPath(path: string) {
         const cache = Observer._splitPathsCache;
@@ -211,6 +218,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
         const path = (target._path ? (`${target._path}.`) : '') + key;
         const type = typeof value;
 
+        if (key === UNSAFE_KEY) {
+            return false;
+        }
+
         target._keys.push(key);
 
         if (type === 'object' && (value instanceof Array)) {
@@ -256,6 +267,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
             }
 
             for (i in value) {
+                if (i === UNSAFE_KEY) {
+                    continue;
+                }
+
                 if (typeof value[i] === 'object') {
                     this._prepare(target._data[key], i, value[i], true, remote);
                 } else {
@@ -314,6 +329,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
         let i;
         let valueOld: Value;
         let keys = Observer._splitPath(path);
+        if (isUnsafePath(keys)) {
+            return false;
+        }
+
         const length = keys.length;
         const key = keys[length - 1];
         let node: Value = this;
@@ -469,7 +488,7 @@ class Observer<T extends object = Record<string, Value>> extends Events {
                 valueOld = obj.json(valueOld);
             }
 
-            keys = Object.keys(value);
+            keys = Object.keys(value).filter(k => k !== UNSAFE_KEY);
 
             if (!node._data[key] || !node._data[key]._data) {
                 if (node._data[key]) {
@@ -601,7 +620,8 @@ class Observer<T extends object = Record<string, Value>> extends Events {
                 return undefined;
             }
             if (node._data) {
-                node = node._data[keys[i]];
+                // own properties only, so inherited members like 'constructor' aren't reported
+                node = has(node._data, keys[i]) ? node._data[keys[i]] : undefined;
             } else {
                 node = node[keys[i]];
             }
@@ -627,7 +647,8 @@ class Observer<T extends object = Record<string, Value>> extends Events {
             }
 
             if (node._data) {
-                node = node._data[keys[i]];
+                // own properties only, so inherited members like 'constructor' aren't returned
+                node = has(node._data, keys[i]) ? node._data[keys[i]] : undefined;
             } else {
                 node = node[keys[i]];
             }
@@ -667,6 +688,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
     unset(path: string, silent = false, remote = false) {
         let i;
         const keys = Observer._splitPath(path);
+        if (isUnsafePath(keys)) {
+            return false;
+        }
+
         const key = keys[keys.length - 1];
         let node = this;
         let obj = this;
@@ -728,6 +753,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
      */
     remove(path: string, ind: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
+        if (isUnsafePath(keys)) {
+            return false;
+        }
+
         const key = keys[keys.length - 1];
         let node = this;
         let obj = this;
@@ -788,6 +817,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
      */
     removeValue(path: string, value: Value, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
+        if (isUnsafePath(keys)) {
+            return;
+        }
+
         const key = keys[keys.length - 1];
         let node = this;
         let obj = this;
@@ -855,6 +888,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
      */
     insert(path: string, value: Value, ind?: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
+        if (isUnsafePath(keys)) {
+            return;
+        }
+
         const key = keys[keys.length - 1];
         let node = this;
         let obj = this;
@@ -946,6 +983,10 @@ class Observer<T extends object = Record<string, Value>> extends Events {
      */
     move(path: string, indOld: number, indNew: number, silent = false, remote = false) {
         const keys = Observer._splitPath(path);
+        if (isUnsafePath(keys)) {
+            return;
+        }
+
         const key = keys[keys.length - 1];
         let node = this;
         let obj = this;

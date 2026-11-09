@@ -317,4 +317,57 @@ describe('Observer', () => {
         });
     });
 
+    describe('prototype keys', () => {
+
+        const toString = Object.prototype.toString;
+        const valueOf = Object.prototype.valueOf;
+
+        afterEach(() => {
+            // restore in case a test failed and polluted the prototype
+            Object.prototype.toString = toString;
+            Object.prototype.valueOf = valueOf;
+        });
+
+        it('does not write to Object.prototype through __proto__ paths', () => {
+            const observer = new Observer({ a: {} });
+
+            expect(observer.set('__proto__.toString', 'x')).to.equal(false);
+            expect(observer.set('a.__proto__.valueOf', 42)).to.equal(false);
+            expect(observer.unset('__proto__.toString')).to.equal(false);
+
+            expect(Object.prototype.toString).to.equal(toString);
+            expect(Object.prototype.valueOf).to.equal(valueOf);
+        });
+
+        it('ignores __proto__ keys in data', () => {
+            const data = JSON.parse('{"a":{"__proto__":{"polluted":true},"b":1},"__proto__":{"polluted":true}}');
+            const observer = new Observer(data);
+
+            expect(observer.json()).to.deep.equal({ a: { b: 1 } });
+            expect({}.polluted).to.equal(undefined);
+
+            observer.patch(JSON.parse('{"__proto__":{"polluted":true},"c":2}'));
+            expect(observer.get('c')).to.equal(2);
+            expect({}.polluted).to.equal(undefined);
+        });
+
+        it('supports keys named after Object.prototype members', () => {
+            const observer = new Observer({ constructor: 1, toString: 'x', nested: { valueOf: true } });
+
+            expect(observer.get('constructor')).to.equal(1);
+            expect(observer.get('toString')).to.equal('x');
+            expect(observer.get('nested.valueOf')).to.equal(true);
+            expect(observer.json()).to.deep.equal({ constructor: 1, toString: 'x', nested: { valueOf: true } });
+        });
+
+        it('treats inherited members like missing keys', () => {
+            const observer = new Observer({ a: {} });
+
+            expect(observer.has('toString')).to.equal(false);
+            expect(observer.has('a.constructor')).to.equal(false);
+            expect(observer.get('a.constructor')).to.equal(observer.get('a.missing'));
+            expect(observer.get('__proto__')).to.equal(observer.get('missing'));
+        });
+    });
+
 });
