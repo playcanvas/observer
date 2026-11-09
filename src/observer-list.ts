@@ -22,7 +22,8 @@ class ObserverList<T extends Value = Value> extends Events {
         super();
 
         // Make internal property non-enumerable so it doesn't get serialized
-        Object.defineProperty(this, '_indexed', { enumerable: false, writable: true, value: {} });
+        // (no prototype, so index keys like 'constructor' don't collide with its members)
+        Object.defineProperty(this, '_indexed', { enumerable: false, writable: true, value: Object.create(null) });
 
         this.sorted = options.sorted || null;
         this.index = options.index || null;
@@ -257,7 +258,7 @@ class ObserverList<T extends Value = Value> extends Events {
         const items = this.data.slice(0);
 
         this.data = [];
-        this._indexed = { };
+        this._indexed = Object.create(null);
 
         let i = items.length;
         while (i--) {

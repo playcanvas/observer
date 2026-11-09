@@ -26,4 +26,17 @@ describe('Events', () => {
         expect(() => JSON.stringify(events2)).to.not.throw();
     });
 
+    it('supports event names that match Object.prototype members', () => {
+        const events = new Events();
+        const calls = [];
+
+        events.emit('constructor');
+        events.on('toString', value => calls.push(value));
+        events.emit('toString', 1);
+        events.unbind('toString');
+        events.emit('toString', 2);
+
+        expect(calls).to.deep.equal([1]);
+    });
+
 });

@@ -25,4 +25,15 @@ describe('ObserverList', () => {
         observer.destroy();
     });
 
+    it('supports index keys that match Object.prototype members', () => {
+        const list = new ObserverList({ index: 'id' });
+        const item = new Observer({ id: 'constructor' });
+
+        expect(list.get('toString')).to.equal(null);
+        expect(list.has(new Observer({ id: 'toString' }))).to.equal(false);
+
+        expect(list.add(item)).to.equal(0);
+        expect(list.get('constructor')).to.equal(item);
+    });
+
 });
