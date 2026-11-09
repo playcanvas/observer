@@ -7,9 +7,11 @@
             "dom",
             "dom.iterable"
         ],
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "noImplicitAny": true,
         "outDir": ".types",
+        "rootDir": "./src",
+        "strict": false,
         "target": "es6"
     },
     "include": ["src"],
