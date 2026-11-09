@@ -43,7 +43,7 @@
     "eslint": "9.39.5",
     "mocha": "11.8.0",
     "publint": "0.3.25",
-    "rollup": "4.68.0",
+    "rollup": "4.68.2",
     "tslib": "2.9.1",
     "typedoc": "0.28.20",
     "typedoc-plugin-mdn-links": "5.1.1",
