@@ -126,8 +126,9 @@ class Events {
      */
     once(name: string, fn: HandleEvent) {
         const evt = this.on(name, (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7) => {
-            fn.call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+            // unbind first, so the listener is removed even if it throws or re-emits the event
             evt.unbind();
+            fn.call(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
         });
         return evt;
     }
