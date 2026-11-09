@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "noEmit": true,
+        "strict": true,
+        "target": "es2020"
+    },
+    "files": ["observer.ts"]
+}

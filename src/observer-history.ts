@@ -12,7 +12,7 @@ type History = {
  * The ObserverHistory module provides a mechanism for tracking changes to an Observer object and
  * storing them in a history stack.
  */
-class ObserverHistory<T extends object = Record<string, Value>> extends Events {
+class ObserverHistory<T extends object = Value> extends Events {
     item: Observer<T>;
 
     private _history: History;
