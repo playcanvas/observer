@@ -847,12 +847,13 @@ class Observer<T extends object = Value> extends Events {
 
         const arr = node._data[key];
 
-        const ind = arr.indexOf(value);
-        if (ind === -1) {
-            return;
+        let ind = arr.indexOf(value);
+        if (ind === -1 && value instanceof Array) {
+            // history keeps copies of array values, so match those by content
+            ind = arr.findIndex(item => item instanceof Array && arrayEquals(item, value));
         }
 
-        if (arr.length < ind) {
+        if (ind === -1) {
             return;
         }
 
@@ -917,8 +918,14 @@ class Observer<T extends object = Value> extends Events {
         }
 
         const arr = node._data[key];
+        const lengthBefore = arr.length;
 
         value = obj._doInsert(node, key, value, ind);
+
+        // _doInsert skips a value that is already in the array
+        if (arr.length === lengthBefore) {
+            return false;
+        }
 
         if (ind === undefined) {
             ind = arr.length - 1;

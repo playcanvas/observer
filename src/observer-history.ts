@@ -54,32 +54,22 @@ class ObserverHistory<T extends object = Value> extends Events {
                 name: this._prefix + path,
                 combine: this._combine,
                 undo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-
-                    if (valueOld === undefined) {
-                        item.unset(path);
-                    } else {
-                        item.set(path, valueOld);
-                    }
-
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        if (valueOld === undefined) {
+                            item.unset(path);
+                        } else {
+                            item.set(path, valueOld);
+                        }
+                    });
                 },
                 redo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-
-                    if (value === undefined) {
-                        item.unset(path);
-                    } else {
-                        item.set(path, value);
-                    }
-
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        if (value === undefined) {
+                            item.unset(path);
+                        } else {
+                            item.set(path, value);
+                        }
+                    });
                 }
             };
 
@@ -94,20 +84,14 @@ class ObserverHistory<T extends object = Value> extends Events {
                 name: this._prefix + path,
                 combine: this._combine,
                 undo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.set(path, valueOld);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.set(path, valueOld);
+                    });
                 },
                 redo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.unset(path);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.unset(path);
+                    });
                 }
             };
 
@@ -126,20 +110,14 @@ class ObserverHistory<T extends object = Value> extends Events {
                 name: this._prefix + path,
                 combine: this._combine,
                 undo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.removeValue(path, value);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.removeValue(path, value);
+                    });
                 },
                 redo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.insert(path, value, ind);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.insert(path, value, ind);
+                    });
                 }
             };
 
@@ -158,20 +136,14 @@ class ObserverHistory<T extends object = Value> extends Events {
                 name: this._prefix + path,
                 combine: this._combine,
                 undo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.insert(path, value, ind);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.insert(path, value, ind);
+                    });
                 },
                 redo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.removeValue(path, value);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.removeValue(path, value);
+                    });
                 }
             };
 
@@ -186,25 +158,36 @@ class ObserverHistory<T extends object = Value> extends Events {
                 name: this._prefix + path,
                 combine: this._combine,
                 undo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.move(path, ind, indOld);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.move(path, ind, indOld);
+                    });
                 },
                 redo: () => {
-                    const item = this.item.latest();
-                    if (!item) return;
-
-                    item.history.enabled = false;
-                    item.move(path, indOld, ind);
-                    item.history.enabled = true;
+                    this._apply((item) => {
+                        item.move(path, indOld, ind);
+                    });
                 }
             };
 
             this._history.add(action);
         }));
+    }
+
+    // Applies an undo or redo to the latest version of the item with its history disabled, so the
+    // change isn't recorded again, then restores the previous enabled state (even if it throws).
+    // Does nothing once this history has been destroyed.
+    private _apply(fn: (item: Observer<T>) => void) {
+        const item = this.item?.latest();
+        if (!item) return;
+
+        const history = item.history;
+        const enabled = history.enabled;
+        history.enabled = false;
+        try {
+            fn(item);
+        } finally {
+            history.enabled = enabled;
+        }
     }
 
     destroy() {
