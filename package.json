@@ -14,9 +14,14 @@
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./types/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "type": "module",
@@ -37,6 +42,7 @@
     "README.md"
   ],
   "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
     "@playcanvas/eslint-config": "3.0.0",
     "@rollup/plugin-typescript": "12.3.1",
     "chai": "6.3.0",
@@ -44,6 +50,7 @@
     "mocha": "12.0.3",
     "publint": "0.3.25",
     "rollup": "4.68.2",
+    "rollup-plugin-dts": "6.5.1",
     "tslib": "2.9.1",
     "typedoc": "0.28.20",
     "typedoc-plugin-mdn-links": "5.1.1",
@@ -51,10 +58,11 @@
     "typescript": "6.0.3"
   },
   "scripts": {
+    "attw": "attw --pack .",
     "build": "rollup -c && npm run build:types",
     "build:esm": "rollup -c --environment target:esm",
     "build:umd": "rollup -c --environment target:umd",
-    "build:types": "tsc -p tsconfig.build.json",
+    "build:types": "tsc -p tsconfig.build.json && rollup -c --environment target:types",
     "docs": "typedoc",
     "lint": "eslint src test rollup.config.mjs eslint.config.mjs",
     "lint:fix": "eslint src test rollup.config.mjs eslint.config.mjs --fix",

@@ -9,7 +9,7 @@
         ],
         "moduleResolution": "bundler",
         "noImplicitAny": true,
-        "outDir": "types",
+        "outDir": ".types",
         "rootDir": "./src",
         "strict": false,
         "target": "es6"
