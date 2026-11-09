@@ -5,9 +5,11 @@
             "dom",
             "dom.iterable"
         ],
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "noImplicitAny": true,
         "outDir": "dist",
+        "rootDir": "./src",
+        "strict": false,
         "target": "es6"
     },
     "include": ["src", "rollup.config.mjs"],

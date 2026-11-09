@@ -20,6 +20,20 @@
     {
       "matchDepTypes": ["dependencies"],
       "rangeStrategy": "widen"
+    },
+    {
+      "description": "Hold until eslint-plugin-react and eslint-plugin-jsx-a11y (via @playcanvas/eslint-config) support ESLint 10",
+      "matchPackageNames": [
+        "eslint"
+      ],
+      "allowedVersions": "<10.0.0"
+    },
+    {
+      "description": "Hold until typedoc and typescript-eslint support TypeScript 7",
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<7.0.0"
     }
   ]
 }
