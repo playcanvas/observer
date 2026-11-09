@@ -35,8 +35,20 @@ class ObserverList<T extends Value = Value> extends Events {
 
     private _itemKey(item: T) {
         const index = this.index;
+        if (!index) {
+            return null;
+        }
+
         const value: Value = item;
-        return index && ((item instanceof Observer && item.get(index)) || value[index]);
+        if (item instanceof Observer) {
+            // falsy keys such as 0 are valid; only a missing key falls back to a property
+            const key = item.get(index);
+            if (key !== undefined && key !== null) {
+                return key;
+            }
+        }
+
+        return value[index];
     }
 
     get(index: string | number) {
@@ -58,7 +70,7 @@ class ObserverList<T extends Value = Value> extends Events {
     indexOf(item: T) {
         if (this.index) {
             const index = this._itemKey(item) as string | number;
-            return (this._indexed[index] && index) || null;
+            return this._indexed[index] ? index : null;
         }
 
         const ind = this.data.indexOf(item);
@@ -79,9 +91,9 @@ class ObserverList<T extends Value = Value> extends Events {
 
             i = fn(a, b);
 
-            if (i === 1) {
+            if (i > 0) {
                 max = cur - 1;
-            } else if (i === -1) {
+            } else if (i < 0) {
                 min = cur + 1;
             } else {
                 return cur;
@@ -113,16 +125,16 @@ class ObserverList<T extends Value = Value> extends Events {
 
             i = fn(a, b);
 
-            if (i === 1) {
+            if (i > 0) {
                 max = cur - 1;
-            } else if (i === -1) {
+            } else if (i < 0) {
                 min = cur + 1;
             } else {
                 return cur;
             }
         }
 
-        if (fn(a, b) === 1) {
+        if (fn(a, b) > 0) {
             return cur;
         }
 
@@ -170,7 +182,7 @@ class ObserverList<T extends Value = Value> extends Events {
         this.emit('add', item, index, pos);
         if (this.index) {
             const id = this._itemKey(item);
-            if (id) {
+            if (id !== undefined && id !== null) {
                 this.emit(`add[${id}]`, item, index, pos);
             }
         }
@@ -180,6 +192,10 @@ class ObserverList<T extends Value = Value> extends Events {
 
     move(item: T, pos: number) {
         const ind = this.data.indexOf(item);
+        if (ind === -1) {
+            return;
+        }
+
         this.data.splice(ind, 1);
         if (pos === -1) {
             this.data.push(item);
@@ -195,15 +211,22 @@ class ObserverList<T extends Value = Value> extends Events {
             return;
         }
 
-        const ind = this.data.indexOf(item);
-
-        let index = ind;
+        let index: string | number;
         if (this.index) {
-            index = this._itemKey(item) as number;
+            index = this._itemKey(item) as string | number;
+            // has() matches by key, so remove the stored item, which may be a different instance
+            item = this._indexed[index];
             delete this._indexed[index];
         }
 
-        this.data.splice(ind, 1);
+        const ind = this.data.indexOf(item);
+        if (!this.index) {
+            index = ind;
+        }
+
+        if (ind !== -1) {
+            this.data.splice(ind, 1);
+        }
 
         this.emit('remove', item, index);
     }
@@ -219,14 +242,16 @@ class ObserverList<T extends Value = Value> extends Events {
             }
 
             const ind = this.data.indexOf(item);
-            this.data.splice(ind, 1);
+            if (ind !== -1) {
+                this.data.splice(ind, 1);
+            }
 
             delete this._indexed[index];
 
             this.emit('remove', item, ind);
         } else {
             const ind = index as number;
-            if (this.data.length < ind) {
+            if (!(ind >= 0 && ind < this.data.length)) {
                 return;
             }
 
@@ -245,12 +270,13 @@ class ObserverList<T extends Value = Value> extends Events {
                 continue;
             }
 
+            const item = this.data[i];
             if (this.index) {
-                delete this._indexed[this._itemKey(this.data[i]) as string | number];
+                delete this._indexed[this._itemKey(item) as string | number];
             }
             this.data.splice(i, 1);
 
-            this.emit('remove', this.data[i], i);
+            this.emit('remove', item, i);
         }
     }
 
@@ -268,7 +294,8 @@ class ObserverList<T extends Value = Value> extends Events {
 
     forEach(fn: (arg0: T, arg1: Value) => void) {
         for (let i = 0; i < this.data.length; i++) {
-            fn(this.data[i], (this.index && this._itemKey(this.data[i])) || i);
+            const key = this.index ? this._itemKey(this.data[i]) : undefined;
+            fn(this.data[i], key ?? i);
         }
     }
 
