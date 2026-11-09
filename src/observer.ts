@@ -381,7 +381,8 @@ class Observer<T extends object = Value> extends Events {
             valueOld = node[ind];
             if (valueOld instanceof Observer) {
                 valueOld = valueOld.json();
-            } else {
+            } else if (valueOld !== undefined) {
+                // (json(undefined) would return the whole document)
                 valueOld = obj.json(valueOld);
             }
 
@@ -782,7 +783,7 @@ class Observer<T extends object = Value> extends Events {
         }
 
         const arr = node._data[key];
-        if (arr.length < ind) {
+        if (!(ind >= 0 && ind < arr.length)) {
             return false;
         }
 
@@ -1020,17 +1021,18 @@ class Observer<T extends object = Value> extends Events {
 
         const arr = node._data[key];
 
-        if (arr.length < indOld || arr.length < indNew || indOld === indNew) {
+        // -1, or any index past the end, moves the value to the end
+        if (indNew === -1 || indNew >= arr.length) {
+            indNew = arr.length - 1;
+        }
+
+        if (!(indOld >= 0 && indOld < arr.length) || indNew < 0 || indOld === indNew) {
             return;
         }
 
         let value = arr[indOld];
 
         arr.splice(indOld, 1);
-
-        if (indNew === -1) {
-            indNew = arr.length;
-        }
 
         arr.splice(indNew, 0, value);
 

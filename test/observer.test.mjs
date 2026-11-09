@@ -370,4 +370,84 @@ describe('Observer', () => {
         });
     });
 
+    describe('array indices', () => {
+
+        const recordEvents = (observer) => {
+            const events = [];
+            observer.on('*:set', (path, value, valueOld) => events.push(['set', path, value, valueOld]));
+            observer.on('*:remove', (path, value, ind) => events.push(['remove', path, value, ind]));
+            observer.on('*:move', (path, value, ind, indOld) => events.push(['move', path, value, ind, indOld]));
+            return events;
+        };
+
+        it('remove rejects an index past the end of the array', () => {
+            const observer = new Observer({ big: 'doc', arr: [1, 2] });
+            const events = recordEvents(observer);
+
+            expect(observer.remove('arr', 2)).to.equal(false);
+            expect(observer.get('arr')).to.deep.equal([1, 2]);
+            expect(events).to.deep.equal([]);
+        });
+
+        it('remove rejects a negative index', () => {
+            const observer = new Observer({ arr: [1, 2, 3] });
+
+            expect(observer.remove('arr', -1)).to.equal(false);
+            expect(observer.get('arr')).to.deep.equal([1, 2, 3]);
+        });
+
+        it('remove still removes the last element', () => {
+            const observer = new Observer({ arr: [1, 2, 3] });
+            const events = recordEvents(observer);
+
+            expect(observer.remove('arr', 2)).to.equal(true);
+            expect(observer.get('arr')).to.deep.equal([1, 2]);
+            expect(events).to.deep.equal([['remove', 'arr', 3, 2]]);
+        });
+
+        it('move rejects a source index outside the array', () => {
+            const observer = new Observer({ arr: ['a', 'b', 'c'] });
+
+            expect(observer.move('arr', 3, 0)).to.not.equal(true);
+            expect(observer.move('arr', -1, 0)).to.not.equal(true);
+            expect(observer.get('arr')).to.deep.equal(['a', 'b', 'c']);
+        });
+
+        it('move to an index past the end moves to the end and reports the final index', () => {
+            const observer = new Observer({ arr: ['a', 'b', 'c'] });
+            const events = recordEvents(observer);
+
+            expect(observer.move('arr', 0, 3)).to.equal(true);
+            expect(observer.get('arr')).to.deep.equal(['b', 'c', 'a']);
+            expect(events).to.deep.equal([['move', 'arr', 'a', 2, 0]]);
+
+            // the reported indices can be used to move it back
+            expect(observer.move('arr', 2, 0)).to.equal(true);
+            expect(observer.get('arr')).to.deep.equal(['a', 'b', 'c']);
+        });
+
+        it('move to -1 still moves to the end', () => {
+            const observer = new Observer({ arr: ['a', 'b', 'c'] });
+
+            expect(observer.move('arr', 0, -1)).to.equal(true);
+            expect(observer.get('arr')).to.deep.equal(['b', 'c', 'a']);
+        });
+
+        it('move rejects other negative target indices', () => {
+            const observer = new Observer({ arr: ['a', 'b', 'c'] });
+
+            expect(observer.move('arr', 0, -2)).to.not.equal(true);
+            expect(observer.get('arr')).to.deep.equal(['a', 'b', 'c']);
+        });
+
+        it('set past the end of an array reports undefined as the old value', () => {
+            const observer = new Observer({ big: 'doc', arr: [1] });
+            const events = recordEvents(observer);
+
+            expect(observer.set('arr.1', 2)).to.equal(true);
+            expect(observer.get('arr')).to.deep.equal([1, 2]);
+            expect(events).to.deep.equal([['set', 'arr.1', 2, undefined]]);
+        });
+    });
+
 });
