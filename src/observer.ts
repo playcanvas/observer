@@ -58,7 +58,9 @@ type EachFn = (path: string, type: string, value: Value, key: string) => void;
  *
  * observer.set('name', 'Jane'); // Logs: Name changed from John to Jane
  */
-class Observer<T extends object = Record<string, Value>> extends Events {
+// T defaults to Value (any) rather than Record<string, Value>: Observer<{ a: number }> (inferred
+// from new Observer({ a: 1 })) must stay assignable to a bare Observer.
+class Observer<T extends object = Value> extends Events {
     private _destroyed!: boolean;
 
     private _path!: string;
@@ -1027,10 +1029,13 @@ class Observer<T extends object = Record<string, Value>> extends Events {
     }
 
     /**
-     * @param target - The object to JSONify.
      * @returns The current state of the object tracked by the observer.
      */
     json(): T;
+    /**
+     * @param target - The object to JSONify.
+     * @returns A plain copy of the target, with nested observers converted to JSON.
+     */
     json(target: Value): Value;
     json(target?: Value) {
         let key, n;

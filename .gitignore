@@ -1,6 +1,6 @@
 node_modules
 .npmrc
-dist
-docs
-types
-.types
+/dist
+/docs
+/types
+/.types
