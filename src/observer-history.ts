@@ -33,7 +33,7 @@ class ObserverHistory<T extends object = Record<string, Value>> extends Events {
 
         this.item = args.item;
         this._history = args.history;
-        this._enabled = args.enabled || true;
+        this._enabled = args.enabled ?? true;
         this._prefix = args.prefix || '';
         this._combine = args.combine || false;
 
