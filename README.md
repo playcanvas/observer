@@ -50,6 +50,10 @@ observer.on('address.city:set', (newValue, oldValue) => {
 observer.set('address.city', 'San Francisco'); // Logs: City changed from New York to San Francisco
 ```
 
+## Developing with AI
+
+Coding agents: start from the [PCUI guides index](https://developer.playcanvas.com/user-manual/pcui/llms.txt), which covers Observer, and the [Observer API index](https://api.playcanvas.com/observer/llms.txt). Both link a Markdown version of every page.
+
 ## Building
 
 To generate the ESM, CommonJS and UMD builds of the Observer library, along with its type declarations, run:
